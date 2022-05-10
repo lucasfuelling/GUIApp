@@ -35,50 +35,52 @@ class MyView(ttk.Frame):
         self.mc_entry.grid(column=1, row=0, sticky=tk.W, **options)
         self.mc_entry.focus()
 
-        self.tube_entry = ttk.Entry(self.top_frame, width=30, textvariable=self.tube_entry_var)
+        self.tube_entry = ttk.Entry(self.top_frame, width=30, textvariable=self.tube_entry_var, font=('Arial',20))
         self.tube_entry.grid(column=1, row=1, sticky=tk.W, **options)
 
-        self.qty_entry = ttk.Entry(self.top_frame, width=30, textvariable=self.qty_entry_var)
+        self.qty_entry = ttk.Entry(self.top_frame, width=30, textvariable=self.qty_entry_var, font=('Arial',20))
         self.qty_entry.grid(column=1, row=2, sticky=tk.W, **options)
 
         # MC
-        ttk.Label(self.top_frame, text='MC:').grid(column=0, row=0, sticky=tk.W, **options)
+        self.mc_label = ttk.Label(self.top_frame, text="機器/Machine:", font=('Arial',20))
+        self.mc_label.grid(column=0, row=0, sticky=tk.W, **options)
+
         self.MC_Button = ttk.Button(self.top_frame, text="X", style="my.TButton")
         self.MC_Button['command'] = self.mc_clear_button_clicked
         self.MC_Button.grid(column=2, row=0, **options)
 
         # Tube
-        ttk.Label(self.top_frame, text='Tube:').grid(column=0, row=1, sticky=tk.W, **options)
-        self.tube_Button = ttk.Button(self.top_frame, text="X")
+        ttk.Label(self.top_frame, text='規格/Tube:', font=('Arial',20)).grid(column=0, row=1, sticky=tk.W, **options)
+        self.tube_Button = ttk.Button(self.top_frame, text="X", style="my.TButton")
         self.tube_Button['command'] = self.tube_clear_button_clicked
         self.tube_Button.grid(column=2, row=1, **options)
 
         # qty
-        ttk.Label(self.top_frame, text='PCs:').grid(column=0, row=2, sticky=tk.W, **options)
-        self.qty_Button = ttk.Button(self.top_frame, text="X")
+        ttk.Label(self.top_frame, text='數量/PCs:', font=('Arial',20)).grid(column=0, row=2, sticky=tk.W, **options)
+        self.qty_Button = ttk.Button(self.top_frame, text="X", style="my.TButton")
         self.qty_Button['command'] = self.qty_clear_button_clicked
         self.qty_Button.grid(column=2, row=2, **options)
 
 
         #bottom Frame
-        self.slider1 = ttk.Scale(self.bottom_frame, from_=8, to=22.5, length=300,variable=self.slider1_value)
+        self.slider1 = ttk.Scale(self.bottom_frame, from_=8, to=22.5, length=800,variable=self.slider1_value)
         self.slider1['command'] = self.slider1_changed
         self.slider1.pack()
         self.slider1_value.set(8)
-        self.slider1_label = ttk.Label(self.bottom_frame, text=self.get_slider1_value())
+        self.slider1_label = ttk.Label(self.bottom_frame, text=self.get_slider1_value(), font=('Arial',20))
         self.slider1_label.pack()
 
-        self.slider2 = ttk.Scale(self.bottom_frame, from_=8, to=22.5, value=17, length=300,variable=self.slider2_value)
+        self.slider2 = ttk.Scale(self.bottom_frame, from_=8, to=22.5, value=17, length=800,variable=self.slider2_value)
         self.slider2['command'] = self.slider2_changed
         self.slider2.pack()
         self.slider2_value.set(17)
-        self.slider2_label = ttk.Label(self.bottom_frame, text=self.get_slider2_value())
+        self.slider2_label = ttk.Label(self.bottom_frame, text=self.get_slider2_value(), font=('Arial',20))
         self.slider2_label.pack()
 
         # save button
-        self.save_button = ttk.Button(self.bottom_frame, text="OK")
+        self.save_button = ttk.Button(self.bottom_frame, text="OK", style="my.TButton")
         self.save_button['command'] = self.save_button_clicked
-        self.save_button.pack(**options)
+        self.save_button.pack(pady=50)
 
 
     def mc_clear_button_clicked(self):
