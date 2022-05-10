@@ -1,0 +1,3 @@
+mariadb==1.0.11
+Pypubsub==4.0.3
+tkTimePicker==2.0.2
