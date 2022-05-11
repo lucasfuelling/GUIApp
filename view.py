@@ -7,27 +7,31 @@ class MyView(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        s = ttk.Style()
-        s.configure('my.TButton', font=('Arial', 20))
 
         self.mc_entry_var = tk.StringVar()
         self.tube_entry_var = tk.StringVar()
         self.qty_entry_var = tk.StringVar()
         self.slider1_value = tk.DoubleVar()
         self.slider2_value = tk.DoubleVar()
+        self.mold_entry_var = tk.StringVar()
 
         # field options
         options = {'padx': 10, 'pady': 10}
 
         #create notebook
+        self.notebook = ttk.Notebook(self.parent)
 
         #set up Frame in subframes
-        self.frame1 = ttk.Frame(self.parent)
-        self.frame1.pack()
+        self.frame1 = ttk.Frame(self.notebook)
+        self.frame2 = ttk.Frame(self.notebook)
+        self.notebook.add(self.frame1, text="液壓/Hydroforming 1 ")
+        self.notebook.add(self.frame2, text="還摸/Mold Exchange 2 ")
+        self.notebook.pack(expand=1, fill='both')
         self.top_frame = ttk.Frame(self.frame1)
         self.top_frame.grid(column=0, row=0)
         self.bottom_frame = ttk.Frame(self.frame1)
         self.bottom_frame.grid(column=0, row=1, pady=30)
+
 
         # TOP FRAME
         # entrys
@@ -82,6 +86,8 @@ class MyView(ttk.Frame):
         self.save_button['command'] = self.save_button_clicked
         self.save_button.pack(pady=50)
 
+        self.s = ttk.Style(self.parent)
+        self.s.configure('my.TButton', font=('Arial', 20))
 
     def mc_clear_button_clicked(self):
         self.mc_entry.delete(0, 'end')

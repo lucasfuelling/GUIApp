@@ -25,5 +25,9 @@ class Controller:
 
             # save to database
             self.model.save()
+            self.view.mc_clear_button_clicked()
+            self.view.tube_clear_button_clicked()
+            self.view.qty_clear_button_clicked()
+            self.view.mc_entry.focus()
         except Exception as error:
             print(repr(error))
