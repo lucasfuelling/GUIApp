@@ -1,0 +1,4 @@
+[Desktop Entry]
+Type=Application
+Name=start
+Exec=python "/home/jiou/GUIApp/main.py"
