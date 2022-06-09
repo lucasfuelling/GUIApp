@@ -23,6 +23,7 @@ class Model(object):
         self._prod_hours = None
         self._avg_tubes_hour = None
         self._mold_change_time = None
+        self._qty_sum = None
 
     @property
     def machine(self):
@@ -58,10 +59,15 @@ class Model(object):
 
     @qty.setter
     def qty(self, value):
-        try:
-            self._qty = int(value)
-        except:
-            raise ValueError('Must be Number!')
+        self._qty = int(value)
+
+    @property
+    def qty_sum(self):
+        return self._qty_sum
+
+    @qty_sum.setter
+    def qty_sum(self, value):
+        self._qty_sum = int(value)
 
     @property
     def start_time(self):
@@ -111,9 +117,9 @@ class Model(object):
         conn = connect_to_mariadb()
         cur = conn.cursor()
         todays_date = dt.datetime.now().strftime("%Y-%m-%d")
-        sql = "INSERT INTO hydroforming (machine, tube, qty, prod_date, prod_hours, avg_tubes_hour, start_time, " \
+        sql = "INSERT INTO hydroforming (machine, tube, qty_sum, prod_date, prod_hours, avg_tubes_hour, start_time, " \
               "end_time) VALUES (?,?,?,?,?,?,?,?) "
-        par = (self._machine, self._tube, self._qty, todays_date, self._prod_hours, self._avg_tubes_hour, self._start_time, self._end_time)
+        par = (self._machine, self._tube, self._qty_sum, todays_date, self._prod_hours, self._avg_tubes_hour, self._start_time, self._end_time)
         cur.execute(sql, par)
         conn.commit()
         print('saved')

@@ -81,11 +81,11 @@ class MainController(tk.Tk):
             self.model.save_input()
 
             # empty entry fields
-            self.frames[view.InputPage].mc_entry_var.delete(0, 'end')
-            self.frames[view.InputPage].tube_entry_var.delete(0, 'end')
-            self.frames[view.InputPage].qty_entry_var.delete(0, 'end')
-            self.frames[view.InputPage].start_time_entry_var.delete(0, 'end')
-            self.frames[view.InputPage].end_time_entry_var.delete(0, 'end')
+            self.frames[view.InputPage].mc_entry.delete(0, 'end')
+            self.frames[view.InputPage].tube_entry.delete(0, 'end')
+            self.frames[view.InputPage].qty_entry.delete(0, 'end')
+            self.frames[view.InputPage].start_time_entry.delete(0, 'end')
+            self.frames[view.InputPage].end_time_entry.delete(0, 'end')
 
             # go back to mainpage
             self.show_frame(view.MainPage)
