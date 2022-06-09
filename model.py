@@ -22,6 +22,7 @@ class Model(object):
         self._end_time = None
         self._prod_hours = None
         self._avg_tubes_hour = None
+        self._mold_change_time = None
 
     @property
     def machine(self):
@@ -31,6 +32,7 @@ class Model(object):
     def machine(self, value):
         self._machine = value
 
+
     @property
     def tube(self):
         return self._tube
@@ -38,6 +40,17 @@ class Model(object):
     @tube.setter
     def tube(self, value):
         self._tube = value
+
+    @property
+    def mold_change_time(self):
+        return self._mold_change_time
+
+    @mold_change_time.setter
+    def mold_change_time(self, value):
+        try:
+            self._mold_change_time = int(value)
+        except:
+            raise ValueError('Must be Number!')
 
     @property
     def qty(self):
@@ -56,7 +69,7 @@ class Model(object):
 
     @start_time.setter
     def start_time(self, str_start_time):
-        self._start_time = int(str_start_time.split(':')[0]) + int(str_start_time.split(':')[1])/60
+        self._start_time = int(str_start_time[:2]) + int(str_start_time[2:])/60
 
     @property
     def end_time(self):
@@ -64,7 +77,10 @@ class Model(object):
 
     @end_time.setter
     def end_time(self, str_end_time):
-        self._end_time = int(str_end_time.split(':')[0]) + int(str_end_time.split(':')[1])/60
+        if len(str_end_time) == 4 and str_end_time.isdigit():
+            self._end_time = int(str_end_time[:2]) + int(str_end_time[2:]) / 60
+        else:
+            raise ValueError('Must be 4 digit number')
 
     @property
     def prod_hours(self):
@@ -91,7 +107,7 @@ class Model(object):
         else:
             self._prod_hours = self._end_time - self._start_time
 
-    def save(self):
+    def save_input(self):
         conn = connect_to_mariadb()
         cur = conn.cursor()
         todays_date = dt.datetime.now().strftime("%Y-%m-%d")
@@ -99,5 +115,27 @@ class Model(object):
               "end_time) VALUES (?,?,?,?,?,?,?,?) "
         par = (self._machine, self._tube, self._qty, todays_date, self._prod_hours, self._avg_tubes_hour, self._start_time, self._end_time)
         cur.execute(sql, par)
+        conn.commit()
+        print('saved')
+
+    def save_mold_change(self):
+        conn = connect_to_mariadb()
+        cur = conn.cursor()
+        todays_date = dt.datetime.now().strftime("%Y-%m-%d")
+        sql = "INSERT INTO moldchange (machine, tube, time, prod_date) VALUES (?,?,?,?)"
+        par = (self._machine, self._tube, self._mold_change_time, todays_date)
+        cur.execute(sql, par)
+        conn.commit()
+        print('saved')
+
+    def get_sum_of_tubes(self, mc):
+        conn = connect_to_mariadb()
+        cur = conn.cursor()
+        todays_date = dt.datetime.now().strftime("%Y-%m-%d")
+        if mc==1:
+            sql = "SELECT tube, qty, avg_tubes_hour FROM hydroforming WHERE machine = 1"
+        else:
+            sql = "SELECT tube, qty, avg_tubes_hour FROM hydroforming WHERE machine = 2"
+        cur.execute(sql)
         conn.commit()
         print('saved')
