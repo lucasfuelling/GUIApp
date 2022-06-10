@@ -3,6 +3,7 @@ import tkinter as tk
 import view
 import model as m
 
+
 class MainController(tk.Tk):
 
     # __init__ function for class tkinterApp
@@ -32,9 +33,13 @@ class MainController(tk.Tk):
             frame.grid(row=0, column=0, sticky="nsew")
 
         self.show_frame(view.MainPage)
-        self.model = m.Model()
 
-    # to display the current frame passed as
+        # instantiate Model
+        self.model = m.Model()
+        self.update_view_mainpage()
+
+
+    # display the frame passed as
     # parameter
     def show_frame(self, cont):
         frame = self.frames[cont]
@@ -93,6 +98,18 @@ class MainController(tk.Tk):
         except Exception as error:
             print(repr(error))
 
+    def update_view_mainpage(self):
+        # update FRAME for machine 1
+        self.model.set_last_data_entry('1')
+        self.frames[view.MainPage].label1_tube.config(text = self.model.tube)
+        self.frames[view.MainPage].label1_qty_sum.config(text=str(self.model.qty_sum) +' / ' + str(self.model.order_qty))
+        self.frames[view.MainPage].label1_avg.config(text=str(self.model.avg_tubes_hour) + ' pcs/h')
+
+        # update FRAME for machine 2
+        self.model.set_last_data_entry('2')
+        self.frames[view.MainPage].label2_tube.config(text = self.model.tube)
+        self.frames[view.MainPage].label2_qty_sum.config(text=str(self.model.qty_sum) +' / ' + str(self.model.order_qty))
+        self.frames[view.MainPage].label2_avg.config(text=str(self.model.avg_tubes_hour) + ' pcs/h')
 
 if __name__ == "__main__":
     # Driver Code

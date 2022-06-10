@@ -3,6 +3,8 @@ from tkinter import ttk
 import re
 
 # standard font and padding for widgets
+import main
+
 LARGEFONT = ("Arial", 20)
 options = {'padx': 15, 'pady': 15}
 
@@ -42,8 +44,8 @@ class MainPage(tk.Frame):
         self.label2_machine.pack(**options)
         self.label2_tube = ttk.Label(self.left_frame, text="Tube2", font=LARGEFONT)
         self.label2_tube.pack()
-        self.label2_QTY = ttk.Label(self.left_frame, text="QTY2", font=LARGEFONT)
-        self.label2_QTY.pack()
+        self.label2_qty_sum = ttk.Label(self.left_frame, text="QTY2", font=LARGEFONT)
+        self.label2_qty_sum.pack()
         self.label2_avg = ttk.Label(self.left_frame, text="AVG2", font=LARGEFONT)
         self.label2_avg.pack()
 
@@ -61,15 +63,15 @@ class MainPage(tk.Frame):
         self.label1_machine.pack(**options)
         self.label1_tube = ttk.Label(self.right_frame, text="Tube1", font=LARGEFONT)
         self.label1_tube.pack()
-        self.label1_QTY = ttk.Label(self.right_frame, text="QTY1", font=LARGEFONT)
-        self.label1_QTY.pack()
+        self.label1_qty_sum = ttk.Label(self.right_frame, text="QTY1", font=LARGEFONT)
+        self.label1_qty_sum.pack()
         self.label1_avg = ttk.Label(self.right_frame, text="AVG1", font=LARGEFONT)
         self.label1_avg.pack()
 
 
 class InputPage(tk.Frame):
 
-    def __init__(self, parent, controller):
+    def __init__(self, parent, controller: main.MainController):
         tk.Frame.__init__(self, parent)
 
         # register validation commands lambda input, typez="int": callback(input, typez=typez)
