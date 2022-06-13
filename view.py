@@ -23,10 +23,10 @@ class MainPage(tk.Frame):
         self.label = ttk.Label(self.top_frame, text="久玖液壓", font=LARGEFONT)
         self.label.pack(expand=True, fill='x', side='left', **options)
         # button to show pages
-        self.button_mold = ttk.Button(self.top_frame, text="Mold change",
+        self.button_mold = ttk.Button(self.top_frame, text="換摸 | Thay đổi khuôn",
                              command=lambda: controller.show_frame(MoldPage))
         self.button_mold.pack(expand=True, fill='both', side='left', **options)
-        self.button_input = ttk.Button(self.top_frame, text="Input Data",
+        self.button_input = ttk.Button(self.top_frame, text="輸入 | Đầu vào",
                              command=lambda: controller.show_frame(InputPage))
         self.button_input.pack(expand=True, fill='both', side='left', **options)
 
@@ -102,7 +102,7 @@ class InputPage(tk.Frame):
         self.top_frame = ttk.Frame(self)
         self.top_frame.pack(fill='both', **options)
         # Title of the page
-        self.input_title_label = ttk.Label(self.top_frame, text='Production input', font=LARGEFONT)
+        self.input_title_label = ttk.Label(self.top_frame, text='輸入 | đầu vào', font=LARGEFONT)
         self.input_title_label.pack(side='left')
         # back button
         button_back = ttk.Button(self.top_frame, text="←", command=lambda: controller.show_frame(MainPage))
@@ -136,17 +136,17 @@ class InputPage(tk.Frame):
         self.end_time_entry.config(validate='focusout', validatecommand=v_end_cmd, invalidcommand=iv_end_cmd)
         self.end_time_entry.grid(column=1, row=5, sticky=tk.W, **options)
         # labels
-        self.mc_label = ttk.Label(self.middle_frame, text="機器/Machine:", font=LARGEFONT)
+        self.mc_label = ttk.Label(self.middle_frame, text="機器 | cỗ máy:", font=LARGEFONT)
         self.mc_label.grid(column=0, row=0, sticky=tk.W, **options)
-        self.tube_label = ttk.Label(self.middle_frame, text='規格/Tube:', font=LARGEFONT)
+        self.tube_label = ttk.Label(self.middle_frame, text='規格 | Sự chỉ rõ:', font=LARGEFONT)
         self.tube_label.grid(column=0, row=1, sticky=tk.W, **options)
-        self.qty_sum_label = ttk.Label(self.middle_frame, text='數量/Counter:', font=LARGEFONT)
+        self.qty_sum_label = ttk.Label(self.middle_frame, text='總數 | tổng số lượng:', font=LARGEFONT)
         self.qty_sum_label.grid(column=0, row=2, sticky=tk.W, **options)
-        self.qty_broken_label = ttk.Label(self.middle_frame, text='數量壞掉/PCs broken:', font=LARGEFONT)
+        self.qty_broken_label = ttk.Label(self.middle_frame, text='數量壞 | PCs bị hỏng:', font=LARGEFONT)
         self.qty_broken_label.grid(column=0, row=3, sticky=tk.W, **options)
-        self.start_time_label = ttk.Label(self.middle_frame, text='開始/Start time:', font=LARGEFONT)
+        self.start_time_label = ttk.Label(self.middle_frame, text='開始 | Bắt đầu:', font=LARGEFONT)
         self.start_time_label.grid(column=0, row=4, sticky=tk.W, **options)
-        self.end_time_label = ttk.Label(self.middle_frame, text='結束/End time:', font=LARGEFONT)
+        self.end_time_label = ttk.Label(self.middle_frame, text='結束 | Chấm dứt:', font=LARGEFONT)
         self.end_time_label.grid(column=0, row=5, sticky=tk.W, **options)
         # validation labels
         self.mc_label_valid = ttk.Label(self.middle_frame, text="    ", font=LARGEFONT, style='')
@@ -213,7 +213,7 @@ class MoldPage(tk.Frame):
         self.top_frame = ttk.Frame(self)
         self.top_frame.pack(fill='both', **options)
         # Title of the page
-        self.mold_title_label = ttk.Label(self.top_frame, text='換模/Mold change', font=LARGEFONT)
+        self.mold_title_label = ttk.Label(self.top_frame, text='換模 | Thay đổi khuôn', font=LARGEFONT)
         self.mold_title_label.pack(side='left')
         # back button
         self.button_back = ttk.Button(self.top_frame, text="←", command=lambda: controller.show_frame(MainPage))
@@ -241,13 +241,13 @@ class MoldPage(tk.Frame):
         self.order_qty_entry = ttk.Entry(self.middle_frame, width=30, textvariable=self.order_qty_entry_var, font=LARGEFONT)
         self.order_qty_entry.grid(column=1, row=3, sticky=tk.W, **options)
         # labels
-        self.mc_label = ttk.Label(self.middle_frame, text="機器/Machine:", font=LARGEFONT)
+        self.mc_label = ttk.Label(self.middle_frame, text="機器 | cỗ máy:", font=LARGEFONT)
         self.mc_label.grid(column=0, row=0, sticky=tk.W, **options)
-        self.tube_label = ttk.Label(self.middle_frame, text='規格/Tube:', font=LARGEFONT)
+        self.tube_label = ttk.Label(self.middle_frame, text='規格 | Sự chỉ rõ:', font=LARGEFONT)
         self.tube_label.grid(column=0, row=1, sticky=tk.W, **options)
-        self.mold_change_time_label = ttk.Label(self.middle_frame, text='積分/time minutes:', font=LARGEFONT)
+        self.mold_change_time_label = ttk.Label(self.middle_frame, text='時間 | thời gian:', font=LARGEFONT)
         self.mold_change_time_label.grid(column=0, row=2, sticky=tk.W, **options)
-        self.order_qty_label = ttk.Label(self.middle_frame, text='訂單/order qty:', font=LARGEFONT)
+        self.order_qty_label = ttk.Label(self.middle_frame, text='訂單數量 | số lượng đặt hàng:', font=LARGEFONT)
         self.order_qty_label.grid(column=0, row=3, sticky=tk.W, **options)
         # validation labels
         self.mc_label_valid = ttk.Label(self.middle_frame, text="    ", font=LARGEFONT, style='')
