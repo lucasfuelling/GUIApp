@@ -53,56 +53,57 @@ class MainController(tk.Tk):
     def save_button_mold_clicked(self):
         try:
             # set the entry data to the model
-            self.model.machine = self.frames[view.MoldPage].mc_entry_var.get()
-            self.model.tube = self.frames[view.MoldPage].tube_entry_var.get()
-            self.model.mold_change_time = self.frames[view.MoldPage].mold_change_time_entry_var.get()
+            machine = self.frames[view.MoldPage].mc_entry_var.get()
+            tube = self.frames[view.MoldPage].tube_entry_var.get()
+            mold_change_time = self.frames[view.MoldPage].mold_change_time_entry_var.get()
+            order_qty = self.frames[view.MoldPage].order_qty_entry_var.get()
 
             #save to database mold change
-            self.model.save_mold_change()
+            self.model.save_mold_change(machine, tube, mold_change_time, order_qty)
 
             # empty entry fields
             self.frames[view.MoldPage].mc_entry.delete(0, 'end')
             self.frames[view.MoldPage].tube_entry.delete(0, 'end')
             self.frames[view.MoldPage].mold_change_time_entry.delete(0, 'end')
+            self.frames[view.MoldPage].order_qty_entry.delete(0, 'end')
 
-            # go back to mainpage
+            # go back to mainpage and update the page
             self.show_frame(view.MainPage)
+            self.update_view_mainpage()
 
         except Exception as error:
             print(repr(error))
 
     def save_button_clicked(self):
-        try:
-            # set the entry data to the model
-            self.model.machine = self.frames[view.InputPage].mc_entry_var.get()
-            self.model.tube = self.frames[view.InputPage].tube_entry_var.get()
-            self.model.qty = self.frames[view.InputPage].qty_entry_var.get()
-            self.model.start_time = self.frames[view.InputPage].start_time_entry_var.get()
-            self.model.end_time = self.frames[view.InputPage].end_time_entry_var.get()
-            self.model.calculate_hours()
-            self.model.calculate_avg_tubes_hour()
+        # set the entry data to the model
+        self.model.machine = self.frames[view.InputPage].mc_entry_var.get()
+        self.model.tube = self.frames[view.InputPage].tube_entry_var.get()
+        self.model.qty_sum = self.frames[view.InputPage].qty_sum_entry_var.get()
+        self.model.start_time = self.frames[view.InputPage].start_time_entry_var.get()
+        self.model.end_time = self.frames[view.InputPage].end_time_entry_var.get()
+        self.model.calc_qty()
+        self.model.calculate_hours()
+        self.model.calculate_avg_tubes_hour()
 
-            # save to database
-            self.model.save_input()
+        # save to database
+        self.model.save_input()
 
-            # empty entry fields
-            self.frames[view.InputPage].mc_entry.delete(0, 'end')
-            self.frames[view.InputPage].tube_entry.delete(0, 'end')
-            self.frames[view.InputPage].qty_entry.delete(0, 'end')
-            self.frames[view.InputPage].start_time_entry.delete(0, 'end')
-            self.frames[view.InputPage].end_time_entry.delete(0, 'end')
+        # empty entry fields
+        self.frames[view.InputPage].mc_entry.delete(0, 'end')
+        self.frames[view.InputPage].tube_entry.delete(0, 'end')
+        self.frames[view.InputPage].qty_sum_entry.delete(0, 'end')
+        self.frames[view.InputPage].start_time_entry.delete(0, 'end')
+        self.frames[view.InputPage].end_time_entry.delete(0, 'end')
 
-            # go back to mainpage
-            self.show_frame(view.MainPage)
-
-        except Exception as error:
-            print(repr(error))
+        # go back to mainpage and update mainpage
+        self.show_frame(view.MainPage)
+        self.update_view_mainpage()
 
     def update_view_mainpage(self):
         # update FRAME for machine 1
         self.model.set_last_data_entry('1')
         self.frames[view.MainPage].label1_tube.config(text = self.model.tube)
-        self.frames[view.MainPage].label1_qty_sum.config(text=str(self.model.qty_sum) +' / ' + str(self.model.order_qty))
+        self.frames[view.MainPage].label1_qty_sum.config(text=str(self.model.qty_sum) + ' / ' + str(self.model.order_qty))
         self.frames[view.MainPage].label1_avg.config(text=str(self.model.avg_tubes_hour) + ' pcs/h')
 
         # update FRAME for machine 2
@@ -110,6 +111,10 @@ class MainController(tk.Tk):
         self.frames[view.MainPage].label2_tube.config(text = self.model.tube)
         self.frames[view.MainPage].label2_qty_sum.config(text=str(self.model.qty_sum) +' / ' + str(self.model.order_qty))
         self.frames[view.MainPage].label2_avg.config(text=str(self.model.avg_tubes_hour) + ' pcs/h')
+
+    def get_order_qty(self):
+        self.model.set_last_data_entry(self.frames[view.InputPage].mc_entry_var.get())
+        return self.model.order_qty
 
 if __name__ == "__main__":
     # Driver Code

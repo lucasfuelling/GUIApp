@@ -89,8 +89,8 @@ class InputPage(tk.Frame):
         # define input variables
         self.mc_entry_var = tk.StringVar()
         self.tube_entry_var = tk.StringVar()
-        self.qty_entry_var = tk.StringVar()
-        self.qty_broken_entry_var = tk.StringVar()
+        self.qty_sum_entry_var = tk.IntVar()
+        self.qty_broken_entry_var = tk.IntVar()
         self.start_time_entry_var = tk.StringVar()
         self.start_time_entry_var.set('800')
         self.end_time_entry_var = tk.StringVar()
@@ -125,8 +125,8 @@ class InputPage(tk.Frame):
         self.mc_entry.grid(column=1, row=0, sticky=tk.W, **options)
         self.tube_entry = ttk.Entry(self.middle_frame, width=30, textvariable=self.tube_entry_var, font=LARGEFONT)
         self.tube_entry.grid(column=1, row=1, sticky=tk.W, **options)
-        self.qty_entry = ttk.Entry(self.middle_frame, width=30, textvariable=self.qty_entry_var, font=LARGEFONT)
-        self.qty_entry.grid(column=1, row=2, sticky=tk.W, **options)
+        self.qty_sum_entry = ttk.Entry(self.middle_frame, width=30, textvariable=self.qty_sum_entry_var, font=LARGEFONT)
+        self.qty_sum_entry.grid(column=1, row=2, sticky=tk.W, **options)
         self.qty_broken_entry = ttk.Entry(self.middle_frame, width=30, textvariable=self.qty_broken_entry_var, font=LARGEFONT)
         self.qty_broken_entry.grid(column=1, row=3, sticky=tk.W, **options)
         self.start_time_entry = ttk.Entry(self.middle_frame, width=30, textvariable=self.start_time_entry_var, font=LARGEFONT)
@@ -140,8 +140,8 @@ class InputPage(tk.Frame):
         self.mc_label.grid(column=0, row=0, sticky=tk.W, **options)
         self.tube_label = ttk.Label(self.middle_frame, text='規格/Tube:', font=LARGEFONT)
         self.tube_label.grid(column=0, row=1, sticky=tk.W, **options)
-        self.qty_label = ttk.Label(self.middle_frame, text='數量/PCs:', font=LARGEFONT)
-        self.qty_label.grid(column=0, row=2, sticky=tk.W, **options)
+        self.qty_sum_label = ttk.Label(self.middle_frame, text='數量/Counter:', font=LARGEFONT)
+        self.qty_sum_label.grid(column=0, row=2, sticky=tk.W, **options)
         self.qty_broken_label = ttk.Label(self.middle_frame, text='數量壞掉/PCs broken:', font=LARGEFONT)
         self.qty_broken_label.grid(column=0, row=3, sticky=tk.W, **options)
         self.start_time_label = ttk.Label(self.middle_frame, text='開始/Start time:', font=LARGEFONT)
@@ -153,8 +153,8 @@ class InputPage(tk.Frame):
         self.mc_label_valid.grid(column=2, row=0, sticky=tk.W, **options)
         self.tube_label_valid = ttk.Label(self.middle_frame, text='    ', font=LARGEFONT, style='')
         self.tube_label_valid.grid(column=2, row=1, sticky=tk.W, **options)
-        self.qty_label_valid = ttk.Label(self.middle_frame, text='    ', font=LARGEFONT, style='')
-        self.qty_label_valid.grid(column=2, row=2, sticky=tk.W, **options)
+        self.qty_sum_label_valid = ttk.Label(self.middle_frame, text='    ', font=LARGEFONT, style='')
+        self.qty_sum_label_valid.grid(column=2, row=2, sticky=tk.W, **options)
         self.qty_broken_label_valid = ttk.Label(self.middle_frame, text='    ', font=LARGEFONT, style='')
         self.qty_broken_label_valid.grid(column=2, row=3, sticky=tk.W, **options)
         self.start_time_label_valid = ttk.Label(self.middle_frame, text='    ', font=LARGEFONT, style='valid.TLabel')
@@ -189,6 +189,7 @@ class InputPage(tk.Frame):
             self.end_time_label_valid.config(style='valid.TLabel')
             return True
 
+
 class MoldPage(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -203,7 +204,8 @@ class MoldPage(tk.Frame):
         # define input variables
         self.mc_entry_var = tk.StringVar()
         self.tube_entry_var = tk.StringVar()
-        self.mold_change_time_entry_var = tk.StringVar()
+        self.mold_change_time_entry_var = tk.IntVar()
+        self.order_qty_entry_var = tk.IntVar()
 
         ############
         # TOP FRAME
@@ -236,6 +238,8 @@ class MoldPage(tk.Frame):
         self.tube_entry.grid(column=1, row=1, sticky=tk.W, **options)
         self.mold_change_time_entry = ttk.Entry(self.middle_frame, width=30, textvariable=self.mold_change_time_entry_var, font=LARGEFONT)
         self.mold_change_time_entry.grid(column=1, row=2, sticky=tk.W, **options)
+        self.order_qty_entry = ttk.Entry(self.middle_frame, width=30, textvariable=self.order_qty_entry_var, font=LARGEFONT)
+        self.order_qty_entry.grid(column=1, row=3, sticky=tk.W, **options)
         # labels
         self.mc_label = ttk.Label(self.middle_frame, text="機器/Machine:", font=LARGEFONT)
         self.mc_label.grid(column=0, row=0, sticky=tk.W, **options)
@@ -243,6 +247,8 @@ class MoldPage(tk.Frame):
         self.tube_label.grid(column=0, row=1, sticky=tk.W, **options)
         self.mold_change_time_label = ttk.Label(self.middle_frame, text='積分/time minutes:', font=LARGEFONT)
         self.mold_change_time_label.grid(column=0, row=2, sticky=tk.W, **options)
+        self.order_qty_label = ttk.Label(self.middle_frame, text='訂單/order qty:', font=LARGEFONT)
+        self.order_qty_label.grid(column=0, row=3, sticky=tk.W, **options)
         # validation labels
         self.mc_label_valid = ttk.Label(self.middle_frame, text="    ", font=LARGEFONT, style='')
         self.mc_label_valid.grid(column=2, row=0, sticky=tk.W, **options)
@@ -255,5 +261,3 @@ class MoldPage(tk.Frame):
         self.save_button.grid(column=1, row=6, sticky=tk.E, **options)
         self.save_valid_label = ttk.Label(self.middle_frame, text='   ', font=LARGEFONT)
         self.save_valid_label.grid(column=2, row=6, **options)
-
-

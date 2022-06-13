@@ -56,26 +56,27 @@ class Model(object):
 
     @mold_change_time.setter
     def mold_change_time(self, value):
-        try:
-            self._mold_change_time = int(value)
-        except:
-            raise ValueError('Must be Number!')
+        self._mold_change_time = value
 
     @property
     def qty(self):
+        if self._qty is None:
+            self._qty = 0
         return self._qty
 
     @qty.setter
     def qty(self, value):
-        self._qty = int(value)
+        self._qty = value
 
     @property
     def qty_sum(self):
+        if self._qty_sum is None:
+            self._qty_sum = 0
         return self._qty_sum
 
     @qty_sum.setter
     def qty_sum(self, value):
-        self._qty_sum = int(value)
+        self._qty_sum = value
 
     @property
     def start_time(self):
@@ -83,7 +84,10 @@ class Model(object):
 
     @start_time.setter
     def start_time(self, str_start_time: str):
-        self._start_time = int(str_start_time[:2]) + int(str_start_time[2:]) / 60
+        if len(str_start_time) == 4:
+            self._start_time = int(str_start_time[:2]) + int(str_start_time[2:]) / 60
+        else:
+            self._start_time = int(str_start_time[:1]) + int(str_start_time[2:]) / 60
 
     @property
     def end_time(self):
@@ -99,7 +103,25 @@ class Model(object):
 
     @property
     def avg_tubes_hour(self):
+        if self._avg_tubes_hour is None:
+            self._avg_tubes_hour = 0
         return self._avg_tubes_hour
+
+    def calc_qty(self):
+        conn = connect_to_mariadb()
+        cur = conn.cursor()
+        sql = f"SELECT qty_sum FROM hydroforming WHERE machine = {self._machine} and in_production = TRUE ORDER BY production_id DESC LIMIT 1"
+        cur.execute(sql)
+        row = cur.fetchone()
+        conn.close()
+        for r in row:
+            qty_sum_last = r
+        if qty_sum_last is None:
+            qty_sum_last = 0
+        self._qty = self._qty_sum - qty_sum_last
+        print(qty_sum_last)
+        print(self._qty_sum)
+
 
     def calculate_avg_tubes_hour(self):
         self._avg_tubes_hour = round(self._qty / self._prod_hours, 1)
@@ -122,27 +144,36 @@ class Model(object):
         conn = connect_to_mariadb()
         cur = conn.cursor()
         todays_date = dt.datetime.now().strftime("%Y-%m-%d")
-        sql = "INSERT INTO hydroforming (machine, tube, qty_sum, prod_date, prod_hours, avg_tubes_hour, start_time, " \
-              "end_time) VALUES (?,?,?,?,?,?,?,?) "
+        sql = "INSERT INTO hydroforming (machine, tube, qty, qty_sum, prod_date, prod_hours, avg_tubes_hour, start_time, " \
+              "end_time, order_qty) VALUES (?,?,?,?,?,?,?,?,?,?) "
         par = (
-        self._machine, self._tube, self._qty_sum, todays_date, self._prod_hours, self._avg_tubes_hour, self._start_time,
-        self._end_time)
+        self._machine, self._tube, self._qty, self._qty_sum, todays_date, self._prod_hours, self._avg_tubes_hour, self._start_time,
+        self._end_time, self._order_qty)
         cur.execute(sql, par)
         conn.commit()
         conn.close()
-        print('saved')
 
-    def save_mold_change(self):
+    def update_inproduction(self, machine):
+        conn = connect_to_mariadb()
+        cur = conn.cursor()
+        sql = f"UPDATE hydroforming SET in_production = 0 WHERE machine={machine} and in_production = 1"
+        cur.execute(sql)
+        conn.commit()
+        conn.close()
+
+    def save_mold_change(self, machine, tube, mold_change_time, order_qty):
+        # set old mold to out of production
+        self.update_inproduction(machine)
+
+        # insert new mold
         conn = connect_to_mariadb()
         cur = conn.cursor()
         todays_date = dt.datetime.now().strftime("%Y-%m-%d")
-        sql = "INSERT INTO moldchange (machine, tube, time, prod_date) VALUES (?,?,?,?)"
-        par = (self._machine, self._tube, self._mold_change_time, todays_date)
+        sql = "INSERT INTO hydroforming (machine, tube, mold_change_time, prod_date, order_qty, in_production) VALUES (?,?,?,?,?,?)"
+        par = (machine, tube, mold_change_time, todays_date, order_qty, True)
         cur.execute(sql, par)
         conn.commit()
         conn.close()
-        print('saved')
-
 
     def set_last_data_entry(self, mc):
         conn = connect_to_mariadb()
@@ -154,6 +185,4 @@ class Model(object):
         cur.execute(sql)
         row = cur.fetchone()
         conn.close()
-        if row is None:
-            pass
         self._tube, self._qty_sum, self._avg_tubes_hour, self._order_qty = row
