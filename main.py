@@ -1,4 +1,3 @@
-import time
 import tkinter as tk
 import view
 import model as m
