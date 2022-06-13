@@ -119,9 +119,6 @@ class Model(object):
         if qty_sum_last is None:
             qty_sum_last = 0
         self._qty = self._qty_sum - qty_sum_last
-        print(qty_sum_last)
-        print(self._qty_sum)
-
 
     def calculate_avg_tubes_hour(self):
         self._avg_tubes_hour = round(self._qty / self._prod_hours, 1)
