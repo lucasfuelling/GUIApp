@@ -119,5 +119,9 @@ if __name__ == "__main__":
     # Driver Code
     app = MainController()
     app.title('JiouJiou Hydroforming')
+    #linux
+    app.attributes('-zoomed', True)
+    #windows
+    #app.state('zoomed')
     app.mainloop()
 
