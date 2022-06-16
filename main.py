@@ -134,6 +134,6 @@ if __name__ == "__main__":
     #linux
     #app.attributes('-zoomed', True)
     #windows
-    app.state('zoomed')
+    #app.state('zoomed')
     app.mainloop()
 
