@@ -46,8 +46,10 @@ class MainController(tk.Tk):
         #set focus on entry first field
         if cont == view.InputPage:
             self.frames[view.InputPage].mc_entry.focus()
+            self.empty_entry_fields(view.InputPage)
         if cont == view.MoldPage:
             self.frames[view.MoldPage].mc_entry.focus()
+            self.empty_entry_fields(view.MoldPage)
 
     def save_button_mold_clicked(self):
         try:
@@ -60,11 +62,7 @@ class MainController(tk.Tk):
             #save to database mold change
             self.model.save_mold_change(machine, tube, mold_change_time, order_qty)
 
-            # empty entry fields
-            self.frames[view.MoldPage].mc_entry.delete(0, 'end')
-            self.frames[view.MoldPage].tube_entry.delete(0, 'end')
-            self.frames[view.MoldPage].mold_change_time_entry.delete(0, 'end')
-            self.frames[view.MoldPage].order_qty_entry.delete(0, 'end')
+            self.empty_entry_fields(view.MoldPage)
 
             # go back to mainpage and update the page
             self.show_frame(view.MainPage)
@@ -88,12 +86,7 @@ class MainController(tk.Tk):
         # save to database
         self.model.save_input()
 
-        # empty entry fields
-        self.frames[view.InputPage].mc_entry.delete(0, 'end')
-        self.frames[view.InputPage].tube_entry.delete(0, 'end')
-        self.frames[view.InputPage].qty_sum_entry.delete(0, 'end')
-        self.frames[view.InputPage].start_time_entry.delete(0, 'end')
-        self.frames[view.InputPage].end_time_entry.delete(0, 'end')
+        self.empty_entry_fields(view.InputPage)
 
         # go back to mainpage and update mainpage
         self.show_frame(view.MainPage)
@@ -112,6 +105,23 @@ class MainController(tk.Tk):
         self.frames[view.MainPage].label2_qty_sum.config(text=str(self.model.qty_sum) +' / ' + str(self.model.order_qty))
         self.frames[view.MainPage].label2_avg.config(text=str(self.model.avg_tubes_hour) + ' pcs/h')
 
+    def empty_entry_fields(self, cont):
+        if cont == view.MoldPage:
+            # empty entry fields
+            self.frames[view.MoldPage].mc_entry.delete(0, 'end')
+            self.frames[view.MoldPage].tube_entry.delete(0, 'end')
+            self.frames[view.MoldPage].mold_change_time_entry.delete(0, 'end')
+            self.frames[view.MoldPage].order_qty_entry.delete(0, 'end')
+        if cont == view.InputPage:
+            # empty entry fields
+            self.frames[view.InputPage].mc_entry.delete(0, 'end')
+            self.frames[view.InputPage].tube_entry.delete(0, 'end')
+            self.frames[view.InputPage].qty_sum_entry.delete(0, 'end')
+            self.frames[view.InputPage].qty_broken_entry.delete(0, 'end')
+            #self.frames[view.InputPage].start_time_entry.delete(0, 'end')
+            #self.frames[view.InputPage].end_time_entry.delete(0, 'end')
+
+
     def get_order_qty(self):
         self.model.set_last_data_entry(self.frames[view.InputPage].mc_entry_var.get())
         return self.model.order_qty
@@ -122,8 +132,8 @@ if __name__ == "__main__":
     app = MainController()
     app.title('JiouJiou Hydroforming')
     #linux
-    app.attributes('-zoomed', True)
+    #app.attributes('-zoomed', True)
     #windows
-    #app.state('zoomed')
+    app.state('zoomed')
     app.mainloop()
 
