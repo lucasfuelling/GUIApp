@@ -76,6 +76,7 @@ class MainController(tk.Tk):
     def save_button_clicked(self):
         # set the entry data to the model
         self.model.machine = self.frames[view.InputPage].mc_entry_var.get()
+        self.model.set_last_data_entry(self.model.machine)
         self.model.tube = self.frames[view.InputPage].tube_entry_var.get()
         self.model.qty_sum = self.frames[view.InputPage].qty_sum_entry_var.get()
         self.model.start_time = self.frames[view.InputPage].start_time_entry_var.get()
@@ -114,6 +115,7 @@ class MainController(tk.Tk):
     def get_order_qty(self):
         self.model.set_last_data_entry(self.frames[view.InputPage].mc_entry_var.get())
         return self.model.order_qty
+
 
 if __name__ == "__main__":
     # Driver Code
