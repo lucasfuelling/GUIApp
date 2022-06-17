@@ -48,6 +48,13 @@ class MainPage(tk.Frame):
         self.label2_qty_sum.pack()
         self.label2_avg = ttk.Label(self.left_frame, text="AVG2", font=LARGEFONT)
         self.label2_avg.pack()
+        #Treeview
+        self.columns = ('date', 'tube', 'qty')
+        self.table2 = ttk.Treeview(self.left_frame, columns=self.columns, show='headings')
+        self.table2.heading('date', text='日期')
+        self.table2.heading('tube', text='規格')
+        self.table2.heading('qty', text='數量')
+        self.table2.pack()
 
         # separator
         self.separator_middle = ttk.Separator(self, orient='vertical')
@@ -67,6 +74,13 @@ class MainPage(tk.Frame):
         self.label1_qty_sum.pack()
         self.label1_avg = ttk.Label(self.right_frame, text="AVG1", font=LARGEFONT)
         self.label1_avg.pack()
+        #Treeview
+        self.columns = ('date', 'tube', 'qty')
+        self.table1 = ttk.Treeview(self.right_frame, columns=self.columns, show='headings')
+        self.table1.heading('date', text='日期')
+        self.table1.heading('tube', text='規格')
+        self.table1.heading('qty', text='數量')
+        self.table1.pack()
 
 
 class InputPage(tk.Frame):
