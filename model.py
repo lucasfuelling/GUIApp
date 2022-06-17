@@ -183,3 +183,15 @@ class Model(object):
         row = cur.fetchone()
         conn.close()
         self._tube, self._qty_sum, self._avg_tubes_hour, self._order_qty = row
+
+    def get_current_production(self, mc):
+        conn = connect_to_mariadb()
+        cur = conn.cursor()
+        if mc == '1':
+            sql = "SELECT prod_date, tube, qty, avg_tubes_hour, mold_change_time FROM hydroforming WHERE machine = 1 and in_production = TRUE ORDER BY production_id ASC"
+        else:
+            sql = "SELECT prod_date, tube, qty, avg_tubes_hour, mold_change_time FROM hydroforming WHERE machine = 2 and in_production = TRUE ORDER BY production_id ASC"
+        cur.execute(sql)
+        row = cur.fetchall()
+        conn.close()
+        return row

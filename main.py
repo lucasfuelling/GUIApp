@@ -1,4 +1,6 @@
 import tkinter as tk
+
+import model
 import view
 import model as m
 
@@ -98,12 +100,20 @@ class MainController(tk.Tk):
         self.frames[view.MainPage].label1_tube.config(text = self.model.tube)
         self.frames[view.MainPage].label1_qty_sum.config(text=str(self.model.qty_sum) + ' / ' + str(self.model.order_qty))
         self.frames[view.MainPage].label1_avg.config(text=str(self.model.avg_tubes_hour) + ' pcs/h')
+        # get data of current production
+        row = self.model.get_current_production('1')
+        for r in row:
+            self.frames[view.MainPage].table1.insert('', tk.END, values=r)
 
         # update FRAME for machine 2
         self.model.set_last_data_entry('2')
         self.frames[view.MainPage].label2_tube.config(text = self.model.tube)
         self.frames[view.MainPage].label2_qty_sum.config(text=str(self.model.qty_sum) +' / ' + str(self.model.order_qty))
         self.frames[view.MainPage].label2_avg.config(text=str(self.model.avg_tubes_hour) + ' pcs/h')
+        # get data of current production
+        row = self.model.get_current_production('2')
+        for r in row:
+            self.frames[view.MainPage].table2.insert('', tk.END, values=r)
 
     def empty_entry_fields(self, cont):
         if cont == view.MoldPage:

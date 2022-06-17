@@ -49,11 +49,18 @@ class MainPage(tk.Frame):
         self.label2_avg = ttk.Label(self.left_frame, text="AVG2", font=LARGEFONT)
         self.label2_avg.pack()
         #Treeview
-        self.columns = ('date', 'tube', 'qty')
+        self.columns = ('date', 'tube', 'qty', 'avg_h', 'mold_time')
         self.table2 = ttk.Treeview(self.left_frame, columns=self.columns, show='headings')
         self.table2.heading('date', text='日期')
         self.table2.heading('tube', text='規格')
         self.table2.heading('qty', text='數量')
+        self.table2.heading('avg_h', text='avg')
+        self.table2.heading('mold_time', text='換模時間')
+        self.table2.column('date', minwidth=0, width=80, stretch='NO')
+        self.table2.column('tube', minwidth=0, width=200, stretch='NO')
+        self.table2.column('qty', minwidth=0, width=60, stretch='NO')
+        self.table2.column('avg_h', minwidth=0, width=60, stretch='NO')
+        self.table2.column('mold_time', minwidth=0, width=60, stretch='NO')
         self.table2.pack()
 
         # separator
@@ -75,11 +82,18 @@ class MainPage(tk.Frame):
         self.label1_avg = ttk.Label(self.right_frame, text="AVG1", font=LARGEFONT)
         self.label1_avg.pack()
         #Treeview
-        self.columns = ('date', 'tube', 'qty')
+        self.columns = ('date', 'tube', 'qty', 'avg_h', 'mold_time')
         self.table1 = ttk.Treeview(self.right_frame, columns=self.columns, show='headings')
         self.table1.heading('date', text='日期')
         self.table1.heading('tube', text='規格')
         self.table1.heading('qty', text='數量')
+        self.table1.heading('avg_h', text='avg')
+        self.table1.heading('mold_time', text='換模時間')
+        self.table1.column('date', minwidth=0, width=80, stretch='NO')
+        self.table1.column('tube', minwidth=0, width=200, stretch='NO')
+        self.table1.column('qty', minwidth=0, width=60, stretch='NO')
+        self.table1.column('avg_h', minwidth=0, width=60, stretch='NO')
+        self.table1.column('mold_time', minwidth=0, width=60, stretch='NO')
         self.table1.pack()
 
 
