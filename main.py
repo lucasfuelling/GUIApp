@@ -67,7 +67,7 @@ class MainController(tk.Tk):
             # send line notification
             msg = '\n機器: ' + machine + '\n'
             msg = msg + '規格: ' + tube + '\n'
-            msg = msg + '換模時間: ' + str(mold_change_time) + ' 分'
+            msg = msg + '換模: ' + str(mold_change_time) + ' 分'
             m.line_notify_message(m.token, msg)
 
             # empty fields
@@ -98,9 +98,9 @@ class MainController(tk.Tk):
         # send line notification
         msg = '\n機器: ' + self.model.machine + '\n'
         msg = msg + '規格: ' + self.model.tube + '\n'
-        msg = msg + '今日數量: ' + str(self.model.qty) + ' PC' + '\n'
-        msg = msg + '平均管數: ' + str(self.model.avg_tubes_hour) + ' PC/小時' + '\n'
-        msg = msg + '合計: ' + str(self.model.qty_sum) + ' | ' + str(self.model.order_qty) + ' PC'
+        msg = msg + '今日: ' + str(self.model.qty) + ' PC' + '\n'
+        msg = msg + '平均: ' + str(self.model.avg_tubes_hour) + ' PC/小時' + '\n'
+        msg = msg + '合計: ' + str(self.model.qty_sum) + '/' + str(self.model.order_qty) + ' PC'
         m.line_notify_message(m.token, msg)
 
         # empty fields
