@@ -152,14 +152,18 @@ class InputPage(tk.Frame):
         self.tube_entry = ttk.Entry(self.middle_frame, width=30, textvariable=self.tube_entry_var, font=LARGEFONT)
         self.tube_entry.grid(column=1, row=1, sticky=tk.W, **options)
         self.qty_sum_entry = ttk.Entry(self.middle_frame, width=30, textvariable=self.qty_sum_entry_var, font=LARGEFONT)
+        self.qty_sum_entry.bind('<Return>', 'event generate %W <Tab>')
         self.qty_sum_entry.grid(column=1, row=2, sticky=tk.W, **options)
         self.qty_broken_entry = ttk.Entry(self.middle_frame, width=30, textvariable=self.qty_broken_entry_var, font=LARGEFONT)
+        self.qty_broken_entry.bind('<Return>', 'event generate %W <Tab>')
         self.qty_broken_entry.grid(column=1, row=3, sticky=tk.W, **options)
         self.start_time_entry = ttk.Entry(self.middle_frame, width=30, textvariable=self.start_time_entry_var, font=LARGEFONT)
+        self.start_time_entry.bind('<Return>', 'event generate %W <Tab>')
         self.start_time_entry.config(validate='focusout', validatecommand=v_cmd, invalidcommand=iv_start_cmd)
         self.start_time_entry.grid(column=1, row=4, sticky=tk.W, **options)
         self.end_time_entry = ttk.Entry(self.middle_frame, width=30, textvariable=self.end_time_entry_var, font=LARGEFONT)
         self.end_time_entry.config(validate='focusout', validatecommand=v_end_cmd, invalidcommand=iv_end_cmd)
+        self.end_time_entry.bind('<Return>', 'event generate %W <Tab>')
         self.end_time_entry.grid(column=1, row=5, sticky=tk.W, **options)
         # labels
         self.mc_label = ttk.Label(self.middle_frame, text="機器 | cỗ máy:", font=LARGEFONT)
@@ -189,9 +193,13 @@ class InputPage(tk.Frame):
         self.end_time_label_valid.grid(column=2, row=5, sticky=tk.W, **options)
         # save button
         self.save_button = ttk.Button(self.middle_frame, text="OK", style='Save.TButton', command=lambda: controller.save_button_clicked())
+        self.save_button.bind('<Return>', lambda event, arg=controller: self.saved_pressed(controller))
         self.save_button.grid(column=1, row=6, sticky=tk.E, **options)
         self.save_valid = ttk.Label(self.middle_frame, text='    ', font=LARGEFONT, style='')
         self.save_valid.grid(column=2, row=6, **options)
+
+    def saved_pressed(self, contr):
+        contr.save_button_clicked()
 
     def on_invalid_start(self):
         self.start_time_label_valid.config(style='invalid.TLabel')
@@ -263,8 +271,10 @@ class MoldPage(tk.Frame):
         self.tube_entry = ttk.Entry(self.middle_frame, width=30, textvariable=self.tube_entry_var, font=LARGEFONT)
         self.tube_entry.grid(column=1, row=1, sticky=tk.W, **options)
         self.mold_change_time_entry = ttk.Entry(self.middle_frame, width=30, textvariable=self.mold_change_time_entry_var, font=LARGEFONT)
+        self.mold_change_time_entry.bind('<Return>', 'event generate %W <Tab>')
         self.mold_change_time_entry.grid(column=1, row=2, sticky=tk.W, **options)
         self.order_qty_entry = ttk.Entry(self.middle_frame, width=30, textvariable=self.order_qty_entry_var, font=LARGEFONT)
+        self.order_qty_entry.bind('<Return>', 'event generate %W <Tab>')
         self.order_qty_entry.grid(column=1, row=3, sticky=tk.W, **options)
         # labels
         self.mc_label = ttk.Label(self.middle_frame, text="機器 | cỗ máy:", font=LARGEFONT)
@@ -284,6 +294,13 @@ class MoldPage(tk.Frame):
         self.mold_change_time_label_valid.grid(column=2, row=2, sticky=tk.W, **options)
         # save button
         self.save_button = ttk.Button(self.middle_frame, text="OK", style='Save.TButton', command=lambda: controller.save_button_mold_clicked())
+        self.save_button.bind('<Return>', lambda event, arg=controller: self.saved_pressed(controller))
         self.save_button.grid(column=1, row=6, sticky=tk.E, **options)
         self.save_valid_label = ttk.Label(self.middle_frame, text='   ', font=LARGEFONT)
         self.save_valid_label.grid(column=2, row=6, **options)
+
+    def saved_pressed(self, contr):
+        contr.save_button_mold_clicked()
+
+    def focus_next(self, event):
+        event.mold_change_time_entry.tk_focusNext().focus_set()
