@@ -113,10 +113,8 @@ class MainController(tk.Tk):
     def update_view_mainpage(self):
         # update FRAME for machine 1
         self.model.set_last_data_entry('1')
-        self.frames[view.MainPage].label1_tube.config(text=self.model.tube)
         self.frames[view.MainPage].label1_qty_sum.config(
-            text=str(self.model.qty_sum) + ' / ' + str(self.model.order_qty))
-        self.frames[view.MainPage].label1_avg.config(text=str(self.model.avg_tubes_hour) + ' pcs/h')
+            text='合計  ' + str(self.model.qty_sum) + ' / ' + str(self.model.order_qty))
         # delete table entries
         self.frames[view.MainPage].table1.delete(*self.frames[view.MainPage].table1.get_children())
         # get data of current production
@@ -127,10 +125,8 @@ class MainController(tk.Tk):
 
         # update FRAME for machine 2
         self.model.set_last_data_entry('2')
-        self.frames[view.MainPage].label2_tube.config(text=self.model.tube)
         self.frames[view.MainPage].label2_qty_sum.config(
-            text=str(self.model.qty_sum) + ' / ' + str(self.model.order_qty))
-        self.frames[view.MainPage].label2_avg.config(text=str(self.model.avg_tubes_hour) + ' pcs/h')
+            text='合計  ' + str(self.model.qty_sum) + ' / ' + str(self.model.order_qty))
         # delete table entries
         self.frames[view.MainPage].table2.delete(*self.frames[view.MainPage].table2.get_children())
         # get data of current production

@@ -5,6 +5,8 @@ import re
 # standard font and padding for widgets
 import main
 
+TITLEFONT = ('Arial', 50, 'bold')
+SUBTITLEFONT = ('Arial', 30, 'bold')
 LARGEFONT = ("Arial", 20)
 options = {'padx': 15, 'pady': 15}
 
@@ -13,6 +15,8 @@ class MainPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         s = ttk.Style()
+        s.configure('my.Treeview', font=('Arial', 15) , rowheight=40)
+        s.configure('title.TLabel', background='grey')
 
         #############
         # TOP FRAME
@@ -40,28 +44,25 @@ class MainPage(tk.Frame):
         self.left_frame = ttk.Frame(self)
         self.left_frame.pack(expand=True, fill='both', side='left', **options)
         # Labels for machine
-        self.label2_machine = ttk.Label(self.left_frame, text="2", font=LARGEFONT)
+        self.label2_machine = ttk.Label(self.left_frame, text="2", font=TITLEFONT)
         self.label2_machine.pack(**options)
-        self.label2_tube = ttk.Label(self.left_frame, text="Tube2", font=LARGEFONT)
-        self.label2_tube.pack()
-        self.label2_qty_sum = ttk.Label(self.left_frame, text="QTY2", font=LARGEFONT)
+        self.label2_qty_sum = ttk.Label(self.left_frame, text="QTY2", font=SUBTITLEFONT)
         self.label2_qty_sum.pack()
-        self.label2_avg = ttk.Label(self.left_frame, text="AVG2", font=LARGEFONT)
-        self.label2_avg.pack()
+
         #Treeview
         self.columns = ('date', 'tube', 'qty', 'avg_h', 'mold_time')
-        self.table2 = ttk.Treeview(self.left_frame, columns=self.columns, show='headings')
+        self.table2 = ttk.Treeview(self.left_frame, columns=self.columns, show='headings', style='my.Treeview')
         self.table2.heading('date', text='日期')
         self.table2.heading('tube', text='規格')
         self.table2.heading('qty', text='數量')
-        self.table2.heading('avg_h', text='avg')
-        self.table2.heading('mold_time', text='換模時間')
-        self.table2.column('date', minwidth=0, width=80, stretch='NO')
-        self.table2.column('tube', minwidth=0, width=200, stretch='NO')
-        self.table2.column('qty', minwidth=0, width=60, stretch='NO')
-        self.table2.column('avg_h', minwidth=0, width=60, stretch='NO')
-        self.table2.column('mold_time', minwidth=0, width=60, stretch='NO')
-        self.table2.pack()
+        self.table2.heading('avg_h', text='PC/小時')
+        self.table2.heading('mold_time', text='換模')
+        self.table2.column('date', minwidth=0, width=120, stretch='NO')
+        self.table2.column('tube', minwidth=0, width=300, stretch='NO', anchor=tk.CENTER)
+        self.table2.column('qty', minwidth=0, width=70, stretch='NO')
+        self.table2.column('avg_h', minwidth=0, width=70, stretch='NO')
+        self.table2.column('mold_time', minwidth=0, width=70, stretch='NO')
+        self.table2.pack(**options)
 
         # separator
         self.separator_middle = ttk.Separator(self, orient='vertical')
@@ -73,28 +74,25 @@ class MainPage(tk.Frame):
         self.right_frame = ttk.Frame(self)
         self.right_frame.pack(expand=True, fill='both', side='left', **options)
         # Labels for machine 1
-        self.label1_machine = ttk.Label(self.right_frame, text="1", font=LARGEFONT)
+        self.label1_machine = ttk.Label(self.right_frame, text="1", font=TITLEFONT)
         self.label1_machine.pack(**options)
-        self.label1_tube = ttk.Label(self.right_frame, text="Tube1", font=LARGEFONT)
-        self.label1_tube.pack()
-        self.label1_qty_sum = ttk.Label(self.right_frame, text="QTY1", font=LARGEFONT)
+        self.label1_qty_sum = ttk.Label(self.right_frame, text="QTY1", font=SUBTITLEFONT)
         self.label1_qty_sum.pack()
-        self.label1_avg = ttk.Label(self.right_frame, text="AVG1", font=LARGEFONT)
-        self.label1_avg.pack()
+
         #Treeview
         self.columns = ('date', 'tube', 'qty', 'avg_h', 'mold_time')
-        self.table1 = ttk.Treeview(self.right_frame, columns=self.columns, show='headings')
+        self.table1 = ttk.Treeview(self.right_frame, columns=self.columns, show='headings', style='my.Treeview')
         self.table1.heading('date', text='日期')
         self.table1.heading('tube', text='規格')
         self.table1.heading('qty', text='數量')
-        self.table1.heading('avg_h', text='avg')
-        self.table1.heading('mold_time', text='換模時間')
-        self.table1.column('date', minwidth=0, width=80, stretch='NO')
-        self.table1.column('tube', minwidth=0, width=200, stretch='NO')
-        self.table1.column('qty', minwidth=0, width=60, stretch='NO')
-        self.table1.column('avg_h', minwidth=0, width=60, stretch='NO')
-        self.table1.column('mold_time', minwidth=0, width=60, stretch='NO')
-        self.table1.pack()
+        self.table1.heading('avg_h', text='PC/小時')
+        self.table1.heading('mold_time', text='換模')
+        self.table1.column('date', minwidth=0, width=120, stretch='NO')
+        self.table1.column('tube', minwidth=0, width=300, stretch='NO', anchor=tk.CENTER)
+        self.table1.column('qty', minwidth=0, width=70, stretch='NO')
+        self.table1.column('avg_h', minwidth=0, width=70, stretch='NO')
+        self.table1.column('mold_time', minwidth=0, width=70, stretch='NO')
+        self.table1.pack(**options)
 
 
 class InputPage(tk.Frame):
