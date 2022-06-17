@@ -39,13 +39,13 @@ class MainController(tk.Tk):
         self.model = m.Model()
         self.update_view_mainpage()
 
-
     # display the frame passed as
     # parameter
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
-        #set focus on entry first field
+
+        # set focus on entry first field
         if cont == view.InputPage:
             self.frames[view.InputPage].mc_entry.focus()
             self.empty_entry_fields(view.InputPage)
@@ -61,9 +61,16 @@ class MainController(tk.Tk):
             mold_change_time = self.frames[view.MoldPage].mold_change_time_entry_var.get()
             order_qty = self.frames[view.MoldPage].order_qty_entry_var.get()
 
-            #save to database mold change
+            # save to database mold change
             self.model.save_mold_change(machine, tube, mold_change_time, order_qty)
 
+            # send line notification
+            msg = '\n機器: ' + machine + '\n'
+            msg = msg + '規格: ' + tube + '\n'
+            msg = msg + '換模時間: ' + str(mold_change_time) + ' 分'
+            m.line_notify_message(m.token, msg)
+
+            # empty fields
             self.empty_entry_fields(view.MoldPage)
 
             # go back to mainpage and update the page
@@ -88,6 +95,15 @@ class MainController(tk.Tk):
         # save to database
         self.model.save_input()
 
+        # send line notification
+        msg = '\n機器: ' + self.model.machine + '\n'
+        msg = msg + '規格: ' + self.model.tube + '\n'
+        msg = msg + '今日數量: ' + str(self.model.qty) + ' PC' + '\n'
+        msg = msg + '平均管數: ' + str(self.model.avg_tubes_hour) + ' PC/小時' + '\n'
+        msg = msg + '合計: ' + str(self.model.qty_sum) + ' | ' + str(self.model.order_qty) + ' PC'
+        m.line_notify_message(m.token, msg)
+
+        # empty fields
         self.empty_entry_fields(view.InputPage)
 
         # go back to mainpage and update mainpage
@@ -97,19 +113,26 @@ class MainController(tk.Tk):
     def update_view_mainpage(self):
         # update FRAME for machine 1
         self.model.set_last_data_entry('1')
-        self.frames[view.MainPage].label1_tube.config(text = self.model.tube)
-        self.frames[view.MainPage].label1_qty_sum.config(text=str(self.model.qty_sum) + ' / ' + str(self.model.order_qty))
+        self.frames[view.MainPage].label1_tube.config(text=self.model.tube)
+        self.frames[view.MainPage].label1_qty_sum.config(
+            text=str(self.model.qty_sum) + ' / ' + str(self.model.order_qty))
         self.frames[view.MainPage].label1_avg.config(text=str(self.model.avg_tubes_hour) + ' pcs/h')
+        # delete table entries
+        self.frames[view.MainPage].table1.delete(*self.frames[view.MainPage].table1.get_children())
         # get data of current production
         row = self.model.get_current_production('1')
+        # insert into table
         for r in row:
             self.frames[view.MainPage].table1.insert('', tk.END, values=r)
 
         # update FRAME for machine 2
         self.model.set_last_data_entry('2')
-        self.frames[view.MainPage].label2_tube.config(text = self.model.tube)
-        self.frames[view.MainPage].label2_qty_sum.config(text=str(self.model.qty_sum) +' / ' + str(self.model.order_qty))
+        self.frames[view.MainPage].label2_tube.config(text=self.model.tube)
+        self.frames[view.MainPage].label2_qty_sum.config(
+            text=str(self.model.qty_sum) + ' / ' + str(self.model.order_qty))
         self.frames[view.MainPage].label2_avg.config(text=str(self.model.avg_tubes_hour) + ' pcs/h')
+        # delete table entries
+        self.frames[view.MainPage].table2.delete(*self.frames[view.MainPage].table2.get_children())
         # get data of current production
         row = self.model.get_current_production('2')
         for r in row:
@@ -128,9 +151,8 @@ class MainController(tk.Tk):
             self.frames[view.InputPage].tube_entry.delete(0, 'end')
             self.frames[view.InputPage].qty_sum_entry.delete(0, 'end')
             self.frames[view.InputPage].qty_broken_entry.delete(0, 'end')
-            #self.frames[view.InputPage].start_time_entry.delete(0, 'end')
-            #self.frames[view.InputPage].end_time_entry.delete(0, 'end')
-
+            # self.frames[view.InputPage].start_time_entry.delete(0, 'end')
+            # self.frames[view.InputPage].end_time_entry.delete(0, 'end')
 
     def get_order_qty(self):
         self.model.set_last_data_entry(self.frames[view.InputPage].mc_entry_var.get())
@@ -141,9 +163,8 @@ if __name__ == "__main__":
     # Driver Code
     app = MainController()
     app.title('JiouJiou Hydroforming')
-    #linux
-    #app.attributes('-zoomed', True)
-    #windows
-    #app.state('zoomed')
+    # linux
+    # app.attributes('-zoomed', True)
+    # windows
+    # app.state('zoomed')
     app.mainloop()
-

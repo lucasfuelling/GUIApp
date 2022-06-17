@@ -1,6 +1,9 @@
 import mariadb
 import datetime as dt
+import requests
 
+# LINE notify https://notify-bot.line.me/en/
+token = 'PZjW8OKGaNnipxLSyieVpaNiK1q7961sooSBhAQKqmW'
 
 def connect_to_mariadb() -> mariadb.connection:
     conn = mariadb.connect(
@@ -11,6 +14,17 @@ def connect_to_mariadb() -> mariadb.connection:
         database="production"
     )
     return conn
+
+
+def line_notify_message(token, msg):
+    headers = {
+        "Authorization": "Bearer " + token,
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+
+    payload = {'message': msg}
+    r = requests.post("https://notify-api.line.me/api/notify", headers=headers, params=payload)
+    return r.status_code
 
 
 class Model(object):
