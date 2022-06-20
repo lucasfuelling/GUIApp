@@ -98,7 +98,7 @@ class MainController(tk.Tk):
         # send line notification
         msg = '\n機器: ' + self.model.machine + '\n'
         msg = msg + '規格: ' + self.model.tube + '\n'
-        msg = msg + '今日: ' + str(self.model.qty) + ' PC' + '\n'
+        msg = msg + '今日: ' + str(self.model.qty) + ' PC ' + '(' + self.model.start_time + '-' + self.model.end_time + ')' + '\n'
         msg = msg + '平均: ' + str(self.model.avg_tubes_hour) + ' PC/小時' + '\n'
         msg = msg + '合計: ' + str(self.model.qty_sum) + '/' + str(self.model.order_qty) + ' PC'
         m.line_notify_message(m.token, msg)
@@ -150,15 +150,11 @@ class MainController(tk.Tk):
             # self.frames[view.InputPage].start_time_entry.delete(0, 'end')
             # self.frames[view.InputPage].end_time_entry.delete(0, 'end')
 
-    def get_order_qty(self):
-        self.model.set_last_data_entry(self.frames[view.InputPage].mc_entry_var.get())
-        return self.model.order_qty
-
 
 if __name__ == "__main__":
     # Driver Code
     app = MainController()
-    app.title('JiouJiou Hydroforming v1.1')
+    app.title('JiouJiou Hydroforming v1.11')
     # linux
     app.attributes('-zoomed', True)
     # windows
