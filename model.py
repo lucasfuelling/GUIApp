@@ -1,9 +1,12 @@
 import mariadb
 import datetime as dt
 import requests
+import math
+
 
 # LINE notify https://notify-bot.line.me/en/
 token = 'PZjW8OKGaNnipxLSyieVpaNiK1q7961sooSBhAQKqmW'
+
 
 def connect_to_mariadb() -> mariadb.connection:
     conn = mariadb.connect(
@@ -94,7 +97,10 @@ class Model(object):
 
     @property
     def start_time(self):
-        return self._start_time
+        frac, whole = math.modf(self._start_time)
+        minute = frac * 60
+        hour = whole
+        return "{:.0f}".format(hour) + ':' + "{:02d}".format(int(minute))
 
     @start_time.setter
     def start_time(self, str_start_time: str):
@@ -105,7 +111,10 @@ class Model(object):
 
     @property
     def end_time(self):
-        return self._end_time
+        frac, whole = math.modf(self._end_time)
+        minute = frac * 60
+        hour = whole
+        return "{:.0f}".format(hour) + ':' + "{:02d}".format(int(minute))
 
     @end_time.setter
     def end_time(self, str_end_time):
