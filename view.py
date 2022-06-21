@@ -17,6 +17,7 @@ class MainPage(tk.Frame):
         s = ttk.Style()
         s.configure('my.Treeview', font=('Arial', 15) , rowheight=40)
         s.configure('title.TLabel', background='grey')
+        s.configure('time.TLabel', font=('Arial', 20, 'bold'))
 
         #############
         # TOP FRAME
@@ -26,6 +27,9 @@ class MainPage(tk.Frame):
         # Main label
         self.label = ttk.Label(self.top_frame, text="久玖液壓", font=LARGEFONT)
         self.label.pack(expand=True, fill='x', side='left', **options)
+        # Time label
+        self.timelabel = ttk.Label(self.top_frame, text='9:00', style='time.TLabel')
+        self.timelabel.pack(side='left', **options)
         # button to show pages
         self.button_mold = ttk.Button(self.top_frame, text="換摸 | Thay đổi khuôn",
                              command=lambda: controller.show_frame(MoldPage))

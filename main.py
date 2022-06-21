@@ -1,9 +1,7 @@
 import tkinter as tk
-
-import model
 import view
 import model as m
-
+from time import strftime
 
 class MainController(tk.Tk):
 
@@ -38,6 +36,8 @@ class MainController(tk.Tk):
         # instantiate Model
         self.model = m.Model()
         self.update_view_mainpage()
+        self.time()
+
 
     # display the frame passed as
     # parameter
@@ -134,6 +134,11 @@ class MainController(tk.Tk):
         for r in row:
             self.frames[view.MainPage].table2.insert('', tk.END, values=r)
 
+    def time(self):
+        current_time = strftime('%H:%M:%S %p')
+        self.frames[view.MainPage].timelabel.config(text=current_time)
+        self.frames[view.MainPage].timelabel.after(1000, self.time)
+
     def empty_entry_fields(self, cont):
         if cont == view.MoldPage:
             # empty entry fields
@@ -147,14 +152,12 @@ class MainController(tk.Tk):
             self.frames[view.InputPage].tube_entry.delete(0, 'end')
             self.frames[view.InputPage].qty_sum_entry.delete(0, 'end')
             self.frames[view.InputPage].qty_broken_entry.delete(0, 'end')
-            # self.frames[view.InputPage].start_time_entry.delete(0, 'end')
-            # self.frames[view.InputPage].end_time_entry.delete(0, 'end')
 
 
 if __name__ == "__main__":
     # Driver Code
     app = MainController()
-    app.title('JiouJiou Hydroforming v1.12')
+    app.title('JiouJiou Hydroforming v1.13')
     # linux
     app.attributes('-zoomed', True)
     # windows
