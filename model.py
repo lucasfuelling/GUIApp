@@ -31,13 +31,16 @@ def line_notify_message(token, msg):
 
 
 class Model(object):
+    _start_time: dt.time
+    _end_time: dt.time
+
     def __init__(self):
         self._machine = None
         self._tube = None
         self._qty = None
-        self._start_time = None
-        self._end_time = None
-        self._prod_hours = None
+        self._start_time = dt.time(0)
+        self._end_time = dt.time(0)
+        self._prod_hours = dt.timedelta(0)
         self._avg_tubes_hour = None
         self._mold_change_time = None
         self._qty_sum = None
@@ -97,28 +100,19 @@ class Model(object):
 
     @property
     def start_time(self):
-        frac, whole = math.modf(self._start_time)
-        minute = frac * 60
-        hour = whole
-        return "{:.0f}".format(hour) + ':' + "{:02d}".format(int(minute))
+        return self._start_time.strftime('%H:%M')
 
     @start_time.setter
     def start_time(self, str_start_time: str):
-        if len(str_start_time) == 4:
-            self._start_time = int(str_start_time[:2]) + int(str_start_time[2:]) / 60
-        else:
-            self._start_time = int(str_start_time[:1]) + int(str_start_time[2:]) / 60
+        self._start_time = dt.time(hour=int(str_start_time[:len(str_start_time)-2]), minute=int(str_start_time[2:]))
 
     @property
     def end_time(self):
-        frac, whole = math.modf(self._end_time)
-        minute = frac * 60
-        hour = whole
-        return "{:.0f}".format(hour) + ':' + "{:02d}".format(int(minute))
+        return self._end_time.strftime('%H:%M')
 
     @end_time.setter
     def end_time(self, str_end_time):
-        self._end_time = int(str_end_time[:2]) + int(str_end_time[2:]) / 60
+        self._end_time = dt.time(hour=int(str_end_time[:len(str_end_time)-2]), minute=int(str_end_time[2:]))
 
     @property
     def prod_hours(self):
@@ -144,21 +138,27 @@ class Model(object):
         self._qty = self._qty_sum - qty_sum_last
 
     def calculate_avg_tubes_hour(self):
-        self._avg_tubes_hour = round(self._qty / self._prod_hours, 1)
+        self._avg_tubes_hour = round(self._qty / (self._prod_hours.seconds/3600), 1)
 
     def calculate_hours(self):
-        lunch_time = 1
-        dinner_time = 0.5
-        if self._start_time <= 12 and self._end_time >= 17.5:
-            self._prod_hours = self._end_time - self._start_time - lunch_time - dinner_time
-        elif self._start_time >= 17.5 and self._end_time >= 17.5:
-            self._prod_hours = self._end_time - self._start_time
-        elif self._start_time >= 13 and self._end_time >= 17.5:
-            self._prod_hours = self._end_time - self._start_time - dinner_time
-        elif self._start_time <= 12 and self._end_time >= 13 and self._end_time <= 17.5:
-            self._prod_hours = self._end_time - self._start_time - lunch_time
+        date = dt.date(1, 1, 1)
+        start_helper = dt.datetime.combine(date, self._start_time)
+        end_helper = dt.datetime.combine(date, self._end_time)
+        time_12_00 = dt.time(hour=12, minute=00)
+        time_13_00 = dt.time(hour=13, minute=00)
+        time_17_30 = dt.time(hour=17, minute=30)
+        lunch_time = dt.timedelta(hours=1)
+        dinner_time = dt.timedelta(hours=0.5)
+        if self._start_time <= time_12_00 and self._end_time >= time_17_30:
+            self._prod_hours = end_helper - start_helper - lunch_time - dinner_time
+        elif self._start_time >= time_17_30 and self._end_time >= time_17_30:
+            self._prod_hours = end_helper - start_helper
+        elif self._start_time >= time_13_00 and self._end_time >= time_17_30:
+            self._prod_hours = end_helper - start_helper - dinner_time
+        elif self._start_time <= time_12_00 and time_13_00 <= self._end_time <= time_17_30:
+            self._prod_hours = end_helper - start_helper - lunch_time
         else:
-            self._prod_hours = self._end_time - self._start_time
+            self._prod_hours = end_helper - start_helper
 
     def save_input(self):
         conn = connect_to_mariadb()
@@ -167,7 +167,7 @@ class Model(object):
         sql = "INSERT INTO hydroforming (machine, tube, qty, qty_sum, prod_date, prod_hours, avg_tubes_hour, start_time, " \
               "end_time, order_qty) VALUES (?,?,?,?,?,?,?,?,?,?) "
         par = (
-        self._machine, self._tube, self._qty, self._qty_sum, todays_date, self._prod_hours, self._avg_tubes_hour, self._start_time,
+        self._machine, self._tube, self._qty, self._qty_sum, todays_date, self._prod_hours.seconds/3600, self._avg_tubes_hour, self._start_time,
         self._end_time, self._order_qty)
         cur.execute(sql, par)
         conn.commit()

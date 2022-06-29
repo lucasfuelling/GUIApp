@@ -36,7 +36,7 @@ class MainController(tk.Tk):
         # instantiate Model
         self.model = m.Model()
         self.update_view_mainpage()
-        self.time()
+        self.display_time()
 
 
     # display the frame passed as
@@ -134,10 +134,10 @@ class MainController(tk.Tk):
         for r in row:
             self.frames[view.MainPage].table2.insert('', tk.END, values=r)
 
-    def time(self):
+    def display_time(self):
         current_time = strftime('%H:%M:%S %p')
         self.frames[view.MainPage].timelabel.config(text=current_time)
-        self.frames[view.MainPage].timelabel.after(1000, self.time)
+        self.frames[view.MainPage].timelabel.after(1000, self.display_time)
 
     def empty_entry_fields(self, cont):
         if cont == view.MoldPage:
