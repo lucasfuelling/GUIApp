@@ -157,7 +157,7 @@ class MainController(tk.Tk):
 if __name__ == "__main__":
     # Driver Code
     app = MainController()
-    app.title('JiouJiou Hydroforming v1.13')
+    app.title('JiouJiou Hydroforming v1.14')
     # linux
     app.attributes('-zoomed', True)
     # windows
