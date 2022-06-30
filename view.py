@@ -68,6 +68,10 @@ class MainPage(tk.Frame):
         self.table2.column('mold_time', minwidth=0, width=70, stretch='NO')
         self.table2.pack(**options)
 
+        # Completion time Label
+        self.completion_label2 = ttk.Label(self.left_frame, text="", font=SUBTITLEFONT)
+        self.completion_label2.pack(**options)
+
         # separator
         self.separator_middle = ttk.Separator(self, orient='vertical')
         self.separator_middle.pack(side='left', fill='y')
@@ -97,6 +101,10 @@ class MainPage(tk.Frame):
         self.table1.column('avg_h', minwidth=0, width=70, stretch='NO')
         self.table1.column('mold_time', minwidth=0, width=70, stretch='NO')
         self.table1.pack(**options)
+
+        # Completion time Label
+        self.completion_label1 = ttk.Label(self.right_frame, text="", font=SUBTITLEFONT)
+        self.completion_label1.pack(**options)
 
 
 class InputPage(tk.Frame):

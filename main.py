@@ -3,6 +3,7 @@ import view
 import model as m
 from time import strftime
 
+
 class MainController(tk.Tk):
 
     # __init__ function for class tkinterApp
@@ -25,22 +26,22 @@ class MainController(tk.Tk):
             frame = F(container, self)
 
             # initializing frame of that object from
-            # startpage, page1, page2 respectively with
+            # mainpage, inputpage, moldpage respectively with
             # for loop
             self.frames[F] = frame
 
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(view.MainPage)
-
         # instantiate Model
         self.model = m.Model()
-        self.update_view_mainpage()
+
+        # show the mainpage
+        self.show_frame(view.MainPage)
+
+        # display the time
         self.display_time()
 
-
-    # display the frame passed as
-    # parameter
+    # display the frame passed as parameter
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
@@ -52,6 +53,10 @@ class MainController(tk.Tk):
         if cont == view.MoldPage:
             self.frames[view.MoldPage].mc_entry.focus()
             self.empty_entry_fields(view.MoldPage)
+        if cont == view.MainPage:
+            # update main page
+            self.update_view_mainpage()
+
 
     def save_button_mold_clicked(self):
         try:
@@ -98,7 +103,8 @@ class MainController(tk.Tk):
         # send line notification
         msg = '\n機器: ' + self.model.machine + '\n'
         msg = msg + '規格: ' + self.model.tube + '\n'
-        msg = msg + '今日: ' + str(self.model.qty) + ' PC ' + '(' + self.model.start_time + '-' + self.model.end_time + ')' + '\n'
+        msg = msg + '今日: ' + str(
+            self.model.qty) + ' PC ' + '(' + self.model.start_time + '-' + self.model.end_time + ')' + '\n'
         msg = msg + '平均: ' + str(self.model.avg_tubes_hour) + ' PC/小時' + '\n'
         msg = msg + '合計: ' + str(self.model.qty_sum) + '/' + str(self.model.order_qty) + ' PC'
         m.line_notify_message(m.token, msg)
@@ -122,6 +128,9 @@ class MainController(tk.Tk):
         # insert into table
         for r in row:
             self.frames[view.MainPage].table1.insert('', tk.END, values=r)
+        # get completion time
+        completion_time = self.model.estimated_time_of_completion('1')
+        self.frames[view.MainPage].completion_label1.config(text='預計完成: ' + completion_time.strftime("%H:%M %Y-%m-%d"))
 
         # update FRAME for machine 2
         self.model.set_last_data_entry('2')
@@ -133,6 +142,9 @@ class MainController(tk.Tk):
         row = self.model.get_current_production('2')
         for r in row:
             self.frames[view.MainPage].table2.insert('', tk.END, values=r)
+        # get completion time
+        completion_time = self.model.estimated_time_of_completion('2')
+        self.frames[view.MainPage].completion_label2.config(text='預計完成: ' + completion_time.strftime("%H:%M  %Y-%m-%d"))
 
     def display_time(self):
         current_time = strftime('%H:%M:%S %p')
@@ -157,9 +169,9 @@ class MainController(tk.Tk):
 if __name__ == "__main__":
     # Driver Code
     app = MainController()
-    app.title('JiouJiou Hydroforming v1.14')
+    app.title('JiouJiou Hydroforming v1.15')
     # linux
-    app.attributes('-zoomed', True)
+    # app.attributes('-zoomed', True)
     # windows
     # app.state('zoomed')
     app.mainloop()

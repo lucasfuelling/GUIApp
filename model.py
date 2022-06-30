@@ -1,7 +1,9 @@
-import mariadb
-import datetime as dt
-import requests
 import math
+
+import mariadb
+import datetime
+import requests
+import businesstimedelta
 
 
 # LINE notify https://notify-bot.line.me/en/
@@ -31,20 +33,21 @@ def line_notify_message(token, msg):
 
 
 class Model(object):
-    _start_time: dt.time
-    _end_time: dt.time
+    _start_time: datetime.time
+    _end_time: datetime.time
 
     def __init__(self):
         self._machine = None
         self._tube = None
         self._qty = None
-        self._start_time = dt.time(0)
-        self._end_time = dt.time(0)
-        self._prod_hours = dt.timedelta(0)
+        self._start_time = datetime.time(0)
+        self._end_time = datetime.time(0)
+        self._prod_hours = datetime.timedelta(0)
         self._avg_tubes_hour = None
         self._mold_change_time = None
         self._qty_sum = None
         self._order_qty = None
+        self._prod_date = datetime.date
 
     @property
     def machine(self):
@@ -104,7 +107,7 @@ class Model(object):
 
     @start_time.setter
     def start_time(self, str_start_time: str):
-        self._start_time = dt.time(hour=int(str_start_time[:len(str_start_time)-2]), minute=int(str_start_time[2:]))
+        self._start_time = datetime.time(hour=int(str_start_time[:len(str_start_time)-2]), minute=int(str_start_time[2:]))
 
     @property
     def end_time(self):
@@ -112,7 +115,7 @@ class Model(object):
 
     @end_time.setter
     def end_time(self, str_end_time):
-        self._end_time = dt.time(hour=int(str_end_time[:len(str_end_time)-2]), minute=int(str_end_time[2:]))
+        self._end_time = datetime.time(hour=int(str_end_time[:len(str_end_time)-2]), minute=int(str_end_time[2:]))
 
     @property
     def prod_hours(self):
@@ -141,14 +144,14 @@ class Model(object):
         self._avg_tubes_hour = round(self._qty / (self._prod_hours.seconds/3600), 1)
 
     def calculate_hours(self):
-        date = dt.date(1, 1, 1)
-        start_helper = dt.datetime.combine(date, self._start_time)
-        end_helper = dt.datetime.combine(date, self._end_time)
-        time_12_00 = dt.time(hour=12, minute=00)
-        time_13_00 = dt.time(hour=13, minute=00)
-        time_17_30 = dt.time(hour=17, minute=30)
-        lunch_time = dt.timedelta(hours=1)
-        dinner_time = dt.timedelta(hours=0.5)
+        date = datetime.date(1, 1, 1)
+        start_helper = datetime.datetime.combine(date, self._start_time)
+        end_helper = datetime.datetime.combine(date, self._end_time)
+        time_12_00 = datetime.time(hour=12, minute=00)
+        time_13_00 = datetime.time(hour=13, minute=00)
+        time_17_30 = datetime.time(hour=17, minute=30)
+        lunch_time = datetime.timedelta(hours=1)
+        dinner_time = datetime.timedelta(hours=0.5)
         if self._start_time <= time_12_00 and self._end_time >= time_17_30:
             self._prod_hours = end_helper - start_helper - lunch_time - dinner_time
         elif self._start_time >= time_17_30 and self._end_time >= time_17_30:
@@ -163,7 +166,7 @@ class Model(object):
     def save_input(self):
         conn = connect_to_mariadb()
         cur = conn.cursor()
-        todays_date = dt.datetime.now().strftime("%Y-%m-%d")
+        todays_date = datetime.datetime.now().strftime("%Y-%m-%d")
         sql = "INSERT INTO hydroforming (machine, tube, qty, qty_sum, prod_date, prod_hours, avg_tubes_hour, start_time, " \
               "end_time, order_qty) VALUES (?,?,?,?,?,?,?,?,?,?) "
         par = (
@@ -188,7 +191,7 @@ class Model(object):
         # insert new mold
         conn = connect_to_mariadb()
         cur = conn.cursor()
-        todays_date = dt.datetime.now().strftime("%Y-%m-%d")
+        todays_date = datetime.datetime.now().strftime("%Y-%m-%d")
         sql = "INSERT INTO hydroforming (machine, tube, mold_change_time, prod_date, order_qty, in_production) VALUES (?,?,?,?,?,?)"
         par = (machine, tube, mold_change_time, todays_date, order_qty, True)
         cur.execute(sql, par)
@@ -198,14 +201,11 @@ class Model(object):
     def set_last_data_entry(self, mc):
         conn = connect_to_mariadb()
         cur = conn.cursor()
-        if mc == '1':
-            sql = "SELECT tube, qty_sum, avg_tubes_hour, order_qty FROM hydroforming WHERE machine = 1 and in_production = TRUE ORDER BY production_id DESC LIMIT 1"
-        else:
-            sql = "SELECT tube, qty_sum, avg_tubes_hour, order_qty FROM hydroforming WHERE machine = 2 and in_production = TRUE ORDER BY production_id DESC LIMIT 1"
+        sql = f"SELECT tube, qty_sum, avg_tubes_hour, order_qty, prod_date FROM hydroforming WHERE machine ={mc} and in_production = TRUE ORDER BY production_id DESC LIMIT 1"
         cur.execute(sql)
         row = cur.fetchone()
         conn.close()
-        self._tube, self._qty_sum, self._avg_tubes_hour, self._order_qty = row
+        self._tube, self._qty_sum, self._avg_tubes_hour, self._order_qty, self._prod_date = row
 
     def get_current_production(self, mc):
         conn = connect_to_mariadb()
@@ -218,3 +218,25 @@ class Model(object):
         row = cur.fetchall()
         conn.close()
         return row
+
+    def estimated_time_of_completion(self, mc) -> datetime.datetime:
+        self.set_last_data_entry(mc)
+        frac, whole = math.modf((self._order_qty - self._qty_sum)/self._avg_tubes_hour)
+        remaining_hours = whole
+        remaining_seconds = frac*3600
+
+        # Define a working day
+        workday = businesstimedelta.WorkDayRule(start_time=datetime.time(8), end_time=datetime.time(17), working_days=[0,1,2,3,4,5])
+
+        # Take out the lunch break
+        lunchbreak = businesstimedelta.LunchTimeRule(
+            start_time=datetime.time(12),
+            end_time=datetime.time(13),
+            working_days=[0, 1, 2, 3, 4, 5])
+
+        # Combine the two
+        businesshrs = businesstimedelta.Rules([workday, lunchbreak])
+        over_hrs = businesstimedelta.Rules([workday, lunchbreak])
+        time_8_00 = datetime.time(hour=8, minute=00)
+        prod_datetime = datetime.datetime.combine(self._prod_date + datetime.timedelta(days=1), time_8_00)
+        return prod_datetime + businesstimedelta.BusinessTimeDelta(businesshrs, hours=remaining_hours, seconds=remaining_seconds)
