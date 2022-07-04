@@ -71,6 +71,8 @@ class MainPage(tk.Frame):
         # Completion time Label
         self.completion_label2 = ttk.Label(self.left_frame, text="", font=SUBTITLEFONT)
         self.completion_label2.pack(**options)
+        self.completion_label2_overhrs = ttk.Label(self.left_frame, text="", font=SUBTITLEFONT)
+        self.completion_label2_overhrs.pack(**options)
 
         # separator
         self.separator_middle = ttk.Separator(self, orient='vertical')
@@ -105,6 +107,8 @@ class MainPage(tk.Frame):
         # Completion time Label
         self.completion_label1 = ttk.Label(self.right_frame, text="", font=SUBTITLEFONT)
         self.completion_label1.pack(**options)
+        self.completion_label1_overhrs = ttk.Label(self.right_frame, text="", font=SUBTITLEFONT)
+        self.completion_label1_overhrs.pack(**options)
 
 
 class InputPage(tk.Frame):

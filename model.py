@@ -219,14 +219,22 @@ class Model(object):
         conn.close()
         return row
 
-    def estimated_time_of_completion(self, mc) -> datetime.datetime:
+    def estimated_time_of_completion(self, mc, include_overhrs) -> datetime.datetime:
         self.set_last_data_entry(mc)
         frac, whole = math.modf((self._order_qty - self._qty_sum)/self._avg_tubes_hour)
         remaining_hours = whole
         remaining_seconds = frac*3600
 
         # Define a working day
-        workday = businesstimedelta.WorkDayRule(start_time=datetime.time(8), end_time=datetime.time(17), working_days=[0,1,2,3,4,5])
+        workday = businesstimedelta.WorkDayRule(
+                start_time=datetime.time(8),
+                end_time=datetime.time(17),
+                working_days=[0,1,2,3,4,5])
+
+        nightshift = businesstimedelta.WorkDayRule(
+                start_time=datetime.time(hour=17, minute=30),
+                end_time=datetime.time(hour=20, minute=30),
+                working_days=[0,1,2,3,4,5])
 
         # Take out the lunch break
         lunchbreak = businesstimedelta.LunchTimeRule(
@@ -236,7 +244,11 @@ class Model(object):
 
         # Combine the two
         businesshrs = businesstimedelta.Rules([workday, lunchbreak])
-        over_hrs = businesstimedelta.Rules([workday, lunchbreak])
+        over_hrs = businesstimedelta.Rules([workday, nightshift, lunchbreak])
         time_8_00 = datetime.time(hour=8, minute=00)
         prod_datetime = datetime.datetime.combine(self._prod_date + datetime.timedelta(days=1), time_8_00)
-        return prod_datetime + businesstimedelta.BusinessTimeDelta(businesshrs, hours=remaining_hours, seconds=remaining_seconds)
+        if include_overhrs:
+            result = prod_datetime + businesstimedelta.BusinessTimeDelta(over_hrs, hours=remaining_hours, seconds=remaining_seconds)
+        else:
+            result = prod_datetime + businesstimedelta.BusinessTimeDelta(businesshrs, hours=remaining_hours, seconds=remaining_seconds)
+        return result
