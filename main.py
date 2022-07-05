@@ -129,11 +129,13 @@ class MainController(tk.Tk):
         for r in row:
             self.frames[view.MainPage].table1.insert('', tk.END, values=r)
         # get completion time
-        completion_time = self.model.estimated_time_of_completion('1', False)
-        self.frames[view.MainPage].completion_label1.config(text='預計完成: ' + completion_time.strftime("%H:%M %Y-%m-%d"))
-        completion_time = self.model.estimated_time_of_completion('1', True)
-        self.frames[view.MainPage].completion_label1_overhrs.config(text='預計完成加班: ' + completion_time.strftime("%H:%M %Y-%m-%d"))
-
+        try:
+            completion_time = self.model.estimated_time_of_completion('1', False)
+            self.frames[view.MainPage].completion_label1.config(text='預計完成: ' + completion_time.strftime("%H:%M %Y-%m-%d"))
+            completion_time = self.model.estimated_time_of_completion('1', True)
+            self.frames[view.MainPage].completion_label1_overhrs.config(text='預計完成加班: ' + completion_time.strftime("%H:%M %Y-%m-%d"))
+        except:
+            pass
         # update FRAME for machine 2
         self.model.set_last_data_entry('2')
         self.frames[view.MainPage].label2_qty_sum.config(
@@ -145,11 +147,13 @@ class MainController(tk.Tk):
         for r in row:
             self.frames[view.MainPage].table2.insert('', tk.END, values=r)
         # get completion time
-        completion_time = self.model.estimated_time_of_completion('2', False)
-        self.frames[view.MainPage].completion_label2.config(text='預計完成: ' + completion_time.strftime("%H:%M  %Y-%m-%d"))
-        completion_time = self.model.estimated_time_of_completion('2', True)
-        self.frames[view.MainPage].completion_label2_overhrs.config(text='預計完成加班: ' + completion_time.strftime("%H:%M  %Y-%m-%d"))
-
+        try:
+            completion_time = self.model.estimated_time_of_completion('2', False)
+            self.frames[view.MainPage].completion_label2.config(text='預計完成: ' + completion_time.strftime("%H:%M  %Y-%m-%d"))
+            completion_time = self.model.estimated_time_of_completion('2', True)
+            self.frames[view.MainPage].completion_label2_overhrs.config(text='預計完成加班: ' + completion_time.strftime("%H:%M  %Y-%m-%d"))
+        except:
+            pass
     def display_time(self):
         current_time = strftime('%H:%M:%S %p')
         self.frames[view.MainPage].timelabel.config(text=current_time)
@@ -173,7 +177,7 @@ class MainController(tk.Tk):
 if __name__ == "__main__":
     # Driver Code
     app = MainController()
-    app.title('JiouJiou Hydroforming v1.16')
+    app.title('JiouJiou Hydroforming v1.17')
     # linux
     app.attributes('-zoomed', True)
     # windows
