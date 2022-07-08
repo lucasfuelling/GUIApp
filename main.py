@@ -136,6 +136,7 @@ class MainController(tk.Tk):
             self.frames[view.MainPage].completion_label1_overhrs.config(text='預計完成加班: ' + completion_time.strftime("%H:%M %Y-%m-%d"))
         except:
             pass
+
         # update FRAME for machine 2
         self.model.set_last_data_entry('2')
         self.frames[view.MainPage].label2_qty_sum.config(
@@ -154,6 +155,7 @@ class MainController(tk.Tk):
             self.frames[view.MainPage].completion_label2_overhrs.config(text='預計完成加班: ' + completion_time.strftime("%H:%M  %Y-%m-%d"))
         except:
             pass
+
     def display_time(self):
         current_time = strftime('%H:%M:%S %p')
         self.frames[view.MainPage].timelabel.config(text=current_time)

@@ -101,6 +101,8 @@ class Model(object):
     def qty_sum(self, value):
         self._qty_sum = value
 
+
+
     @property
     def start_time(self):
         return self._start_time.strftime('%H:%M')
@@ -210,13 +212,17 @@ class Model(object):
     def get_current_production(self, mc):
         conn = connect_to_mariadb()
         cur = conn.cursor()
-        if mc == '1':
-            sql = "SELECT prod_date, tube, qty, avg_tubes_hour, mold_change_time FROM hydroforming WHERE machine = 1 and in_production = TRUE ORDER BY production_id ASC"
-        else:
-            sql = "SELECT prod_date, tube, qty, avg_tubes_hour, mold_change_time FROM hydroforming WHERE machine = 2 and in_production = TRUE ORDER BY production_id ASC"
+        sql = f"SELECT prod_date, tube, qty, avg_tubes_hour, mold_change_time FROM hydroforming WHERE machine = {mc} and in_production = TRUE ORDER BY production_id ASC"
         cur.execute(sql)
         row = cur.fetchall()
         conn.close()
+        # loop through list of tuples and replace "None" = 0
+        for i, r in enumerate(row):
+            temp = list(r)
+            for j, item in enumerate(r):
+                if item == None:
+                    temp[j] = 0
+            row[i] = tuple(temp)
         return row
 
     def estimated_time_of_completion(self, mc, include_overhrs) -> datetime.datetime:
