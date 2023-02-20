@@ -117,7 +117,7 @@ class Model(object):
 
     @end_time.setter
     def end_time(self, str_end_time):
-        self._end_time = datetime.time(hour=int(str_end_time[:len(str_end_time)-2]), minute=int(str_end_time[2:]))
+        self._end_time = datetime.time(hour=int(str_end_time[:len(str_end_time)-2]), minute=int(str_end_time[-2:]))
 
     @property
     def prod_hours(self):
@@ -143,6 +143,7 @@ class Model(object):
         self._qty = self._qty_sum - qty_sum_last
 
     def calculate_avg_tubes_hour(self):
+        print(self._prod_hours.seconds)
         self._avg_tubes_hour = round(self._qty / (self._prod_hours.seconds/3600), 1)
 
     def calculate_hours(self):

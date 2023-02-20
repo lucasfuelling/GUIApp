@@ -1,0 +1,8 @@
+# setup autostart
+mkdir /home/pi/.config/autostart
+nano /home/pi/.config/autostart/start.desktop
+
+[Desktop Entry]
+Type=Application
+Name=Hydro
+Exec=/usr/bin/python3 /home/pi/GUIApp/main.py
