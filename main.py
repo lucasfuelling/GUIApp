@@ -175,15 +175,15 @@ class MainController(tk.Tk):
             self.frames[view.InputPage].qty_sum_entry.delete(0, 'end')
             self.frames[view.InputPage].qty_broken_entry.delete(0, 'end')
 
-        def shutdown():
-            os.system("sudo shutdown -h now")
+    def shutdown(self):
+        os.system("sudo shutdown -h now")
 
 if __name__ == "__main__":
     # Driver Code
     app = MainController()
     app.title('JiouJiou Hydroforming v1.19')
     # linux
-    app.attributes('-zoomed', True)
+    #app.attributes('-zoomed', True)
     # windows
     #app.state('zoomed')
     app.mainloop()
