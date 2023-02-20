@@ -1,8 +1,13 @@
 # setup autostart
-mkdir /home/pi/.config/autostart
-nano /home/pi/.config/autostart/start.desktop
+mkdir /home/jiou/.config/autostart
+nano /home/jiou/.config/autostart/start.desktop
 
 [Desktop Entry]
 Type=Application
 Name=Hydro
-Exec=/usr/bin/python3 /home/pi/GUIApp/main.py
+Exec=/usr/bin/python3 /home/jiou/GUIApp/main.py
+
+
+#To install
+pip install -r requirements.txt
+sudo apt-get install -y libmariadb-dev
