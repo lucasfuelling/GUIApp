@@ -27,6 +27,10 @@ class MainPage(tk.Frame):
         # Main label
         self.label = ttk.Label(self.top_frame, text="久玖液壓", font=LARGEFONT)
         self.label.pack(expand=True, fill='x', side='left', **options)
+        # Shutdown button
+        self.button_shutdown = ttk.Button(self.top_frame, text="OFF",
+                             command=lambda: controller.shutdown())
+        self.button_shutdown.pack(expand=True, fill='both', side='left', **options)
         # Time label
         self.timelabel = ttk.Label(self.top_frame, text='9:00', style='time.TLabel')
         self.timelabel.pack(side='left', **options)

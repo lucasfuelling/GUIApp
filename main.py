@@ -2,7 +2,7 @@ import tkinter as tk
 import view
 import model as m
 from time import strftime
-
+import os
 
 class MainController(tk.Tk):
 
@@ -175,6 +175,8 @@ class MainController(tk.Tk):
             self.frames[view.InputPage].qty_sum_entry.delete(0, 'end')
             self.frames[view.InputPage].qty_broken_entry.delete(0, 'end')
 
+        def shutdown():
+            os.system("sudo shutdown -h now")
 
 if __name__ == "__main__":
     # Driver Code
