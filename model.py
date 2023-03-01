@@ -14,7 +14,7 @@ def connect_to_mariadb() -> mariadb.connection:
     conn = mariadb.connect(
         user="root",
         password="Jiou96189618!",
-        host="192.168.1.98",
+        host="server2",
         port=3306,
         database="production"
     )
