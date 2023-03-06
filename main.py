@@ -183,7 +183,7 @@ if __name__ == "__main__":
     app = MainController()
     app.title('JiouJiou Hydroforming v1.19')
     # linux
-    app.attributes('-zoomed', True)
+    #app.attributes('-zoomed', True)
     # windows
     #app.state('zoomed')
     app.mainloop()
